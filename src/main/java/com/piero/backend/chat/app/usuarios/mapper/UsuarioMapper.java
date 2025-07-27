@@ -11,7 +11,6 @@ public class UsuarioMapper {
         if (usuario == null) { return null; }
         return UsuarioDTO
                 .builder()
-                .id(usuario.getId())
                 .nombre(usuario.getNombre())
                 .apellido(usuario.getApellido())
                 .correo(usuario.getCorreo())
