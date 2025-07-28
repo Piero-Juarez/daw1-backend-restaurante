@@ -1,6 +1,5 @@
 package com.piero.backend.chat.app.usuarios.service.impl;
 
-import com.piero.backend.chat.app.auth.service.AuthService;
 import com.piero.backend.chat.app.usuarios.dto.UsuarioDTORequest;
 import com.piero.backend.chat.app.usuarios.dto.UsuarioDTOResponse;
 import com.piero.backend.chat.app.usuarios.mapper.UsuarioMapper;
