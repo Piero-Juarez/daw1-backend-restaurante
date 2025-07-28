@@ -1,19 +1,16 @@
 package com.piero.backend.chat.app.auth.service;
 
 import com.piero.backend.chat.app.auth.dto.LoginRequest;
-import com.piero.backend.chat.app.auth.dto.RegisterRequest;
 import com.piero.backend.chat.app.auth.dto.TokenResponse;
 import com.piero.backend.chat.app.auth.model.Token;
 import com.piero.backend.chat.app.auth.model.enums.TokenType;
 import com.piero.backend.chat.app.auth.repository.TokenRepository;
 import com.piero.backend.chat.app.usuarios.model.Usuario;
-import com.piero.backend.chat.app.usuarios.model.enums.Rol;
 import com.piero.backend.chat.app.usuarios.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,11 +21,11 @@ public class AuthService {
 
     private final UsuarioRepository usuarioRepository;
     private final TokenRepository tokenRepository;
-    private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    public TokenResponse register(RegisterRequest request) {
+    /*
+    public TokenResponse register(UsuarioDTORequest request) {
         Usuario usuario = Usuario.builder()
                 .nombre(request.nombre())
                 .apellido(request.apellido())
@@ -42,6 +39,7 @@ public class AuthService {
         saveUserToken(usuarioGuardado, jwtToken);
         return new TokenResponse(jwtToken, refreshToken);
     }
+     */
 
     public TokenResponse login(LoginRequest request) {
         authenticationManager.authenticate(
