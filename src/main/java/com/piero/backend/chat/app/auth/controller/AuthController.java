@@ -1,7 +1,6 @@
 package com.piero.backend.chat.app.auth.controller;
 
 import com.piero.backend.chat.app.auth.dto.LoginRequest;
-import com.piero.backend.chat.app.auth.dto.RegisterRequest;
 import com.piero.backend.chat.app.auth.dto.TokenResponse;
 import com.piero.backend.chat.app.auth.service.AuthService;
 import lombok.RequiredArgsConstructor;
