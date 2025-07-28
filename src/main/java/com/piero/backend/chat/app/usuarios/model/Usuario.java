@@ -33,6 +33,9 @@ public class Usuario {
     @Enumerated(EnumType.STRING)
     private Rol rol;
 
+    @Builder.Default
+    private Boolean activo = true;
+
     @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<Token> tokens;
