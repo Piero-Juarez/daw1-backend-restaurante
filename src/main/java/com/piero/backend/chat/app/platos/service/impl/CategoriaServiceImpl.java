@@ -23,12 +23,18 @@ public class CategoriaServiceImpl implements CategoriaService {
 
     @Override
     public CategoriaDTOResponse guardarCategoria(CategoriaDTORequest categoriaRequest) {
-        return null;
+        Categoria categoria = categoriaRepository.save(categoriaMapper.RequestToEntity(categoriaRequest));
+        return categoriaMapper.toDtoResponse(categoria);
     }
 
     @Override
-    public CategoriaDTORequest actualizarCategoria(CategoriaDTORequest categoriaRequest) {
-        return null;
+    public CategoriaDTOResponse actualizarCategoria(Short id, CategoriaDTORequest categoriaRequest) {
+        Categoria categoria = categoriaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Categoria no encontrada"));
+        categoria.setNombre(categoriaRequest.nombre());
+        categoria.setDescripcion(categoriaRequest.descripcion());
+        categoriaRepository.save(categoria);
+        return categoriaMapper.toDtoResponse(categoria);
     }
 
     @Override

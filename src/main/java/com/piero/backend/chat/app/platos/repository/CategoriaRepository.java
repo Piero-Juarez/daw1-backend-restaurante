@@ -9,4 +9,7 @@ import java.util.List;
 @Repository
 public interface CategoriaRepository extends JpaRepository<Categoria, Short> {
     List<Categoria> findAllByActivo(Boolean activo);
+
+
+
 }
