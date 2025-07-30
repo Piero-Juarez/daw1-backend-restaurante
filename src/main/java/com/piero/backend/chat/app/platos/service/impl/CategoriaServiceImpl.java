@@ -1,5 +1,7 @@
 package com.piero.backend.chat.app.platos.service.impl;
 
+import com.piero.backend.chat.app.platos.dto.categoria.CategoriaDTORequest;
+import com.piero.backend.chat.app.platos.dto.categoria.CategoriaDTOResponse;
 import com.piero.backend.chat.app.platos.model.Categoria;
 import com.piero.backend.chat.app.platos.repository.CategoriaRepository;
 import com.piero.backend.chat.app.platos.service.CategoriaService;
@@ -12,23 +14,24 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CategoriaServiceImpl implements CategoriaService {
     private final CategoriaRepository categoriaRepository;
+
     @Override
-    public List<Categoria> listarCategorias() {
+    public List<CategoriaDTOResponse> listarCategorias() {
+        return List.of();
+    }
+
+    @Override
+    public CategoriaDTOResponse guardarCategoria(CategoriaDTORequest categoriaRequest) {
         return null;
     }
 
     @Override
-    public Categoria guardarCategoria(Categoria categoria) {
+    public CategoriaDTORequest actualizarCategoria(CategoriaDTORequest categoriaRequest) {
         return null;
     }
 
     @Override
-    public Categoria actualizarCategoria(Categoria categoria) {
-        return null;
-    }
-
-    @Override
-    public void eliminarCategoria(Categoria categoria) {
+    public void eliminarCategoria(Integer idCategoria) {
 
     }
 }
