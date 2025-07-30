@@ -9,5 +9,6 @@ public interface CategoriaService {
     List<CategoriaDTOResponse> listarCategorias();
     CategoriaDTOResponse guardarCategoria(CategoriaDTORequest categoriaRequest);
     CategoriaDTOResponse actualizarCategoria(Short id, CategoriaDTORequest categoriaRequest);
-    void eliminarCategoria(Integer idCategoria);
+    CategoriaDTOResponse obtenerCategoriaPorId(Short id);
+    void eliminarCategoria(Short idCategoria);
 }

@@ -6,6 +6,7 @@ import com.piero.backend.chat.app.platos.mapper.CategoriaMapper;
 import com.piero.backend.chat.app.platos.model.Categoria;
 import com.piero.backend.chat.app.platos.repository.CategoriaRepository;
 import com.piero.backend.chat.app.platos.service.CategoriaService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,7 @@ public class CategoriaServiceImpl implements CategoriaService {
     private final CategoriaMapper categoriaMapper;
     @Override
     public List<CategoriaDTOResponse> listarCategorias() {
-        return categoriaMapper.listToDto(categoriaRepository.findAllByActivo(true));
+        return categoriaMapper.listToDto(categoriaRepository.findAll());
     }
 
     @Override
@@ -38,7 +39,12 @@ public class CategoriaServiceImpl implements CategoriaService {
     }
 
     @Override
-    public void eliminarCategoria(Integer idCategoria) {
+    public CategoriaDTOResponse obtenerCategoriaPorId(Short id) {
+        return categoriaMapper.toDtoResponse(categoriaRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Categoria no encontrada con id: " + id))) ;
+    }
 
+    @Override
+    public void eliminarCategoria(Short idCategoria) {
+        categoriaRepository.deleteById(idCategoria);
     }
 }

@@ -22,7 +22,7 @@ public class CategoriaMapper {
         Categoria categoria = new Categoria();
         categoria.setNombre(categoriaDTORequest.nombre());
         categoria.setDescripcion(categoriaDTORequest.descripcion());
-        categoria.setActivo(true);
+
         return categoria;
     }
     public List<CategoriaDTOResponse> listToDto(List<Categoria> categorias) {
