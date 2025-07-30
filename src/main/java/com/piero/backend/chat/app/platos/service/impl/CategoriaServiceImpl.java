@@ -2,6 +2,7 @@ package com.piero.backend.chat.app.platos.service.impl;
 
 import com.piero.backend.chat.app.platos.dto.categoria.CategoriaDTORequest;
 import com.piero.backend.chat.app.platos.dto.categoria.CategoriaDTOResponse;
+import com.piero.backend.chat.app.platos.mapper.CategoriaMapper;
 import com.piero.backend.chat.app.platos.model.Categoria;
 import com.piero.backend.chat.app.platos.repository.CategoriaRepository;
 import com.piero.backend.chat.app.platos.service.CategoriaService;
@@ -14,10 +15,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CategoriaServiceImpl implements CategoriaService {
     private final CategoriaRepository categoriaRepository;
-
+    private final CategoriaMapper categoriaMapper;
     @Override
     public List<CategoriaDTOResponse> listarCategorias() {
-        return List.of();
+        return categoriaMapper.listToDto(categoriaRepository.findAllByActivo(true));
     }
 
     @Override
