@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
-import java.util.zip.ZipEntry;
 
 @Getter
 @Setter
@@ -25,6 +24,6 @@ public class Categoria {
     @ToString.Exclude
     private List<Plato> platos;
 
-    private Boolean activo;
+
 
 }
