@@ -6,6 +6,7 @@ import com.piero.backend.chat.app.usuarios.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +18,7 @@ import java.util.List;
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
+    private final SimpMessagingTemplate messagingTemplate;
 
     // LISTADO (GET)
     @GetMapping
@@ -36,6 +38,7 @@ public class UsuarioController {
     @PostMapping
     public ResponseEntity<UsuarioDTOResponse> crearUsuario(@RequestBody UsuarioDTORequest usuarioDTORequest) {
         UsuarioDTOResponse usuarioDTOResponse = usuarioService.guardarUsuario(usuarioDTORequest);
+        messagingTemplate.convertAndSend("/topic/usuarios", usuarioDTOResponse);
         return ResponseEntity.status(HttpStatus.CREATED).body(usuarioDTOResponse);
     }
 
@@ -43,6 +46,7 @@ public class UsuarioController {
     @PutMapping("/{id}")
     public ResponseEntity<UsuarioDTOResponse> actualizarUsuario(@PathVariable Integer id, @RequestBody UsuarioDTORequest usuarioDTORequest) {
         UsuarioDTOResponse usuarioDTOResponse = usuarioService.actualizarUsuario(id, usuarioDTORequest);
+        messagingTemplate.convertAndSend("/topic/usuarios", usuarioDTOResponse);
         return ResponseEntity.ok(usuarioDTOResponse);
     }
 
@@ -50,6 +54,7 @@ public class UsuarioController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarUsuario(@PathVariable Integer id) {
         usuarioService.eliminarUsuario(id);
+        messagingTemplate.convertAndSend("/topic/usuarios/eliminado", id);
         return ResponseEntity.noContent().build();
     }
 
