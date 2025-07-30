@@ -59,7 +59,9 @@ public class UsuarioServiceImpl implements UsuarioService {
         usuarioEncontrado.setNombre(usuarioDTORequest.nombre());
         usuarioEncontrado.setApellido(usuarioDTORequest.apellido());
         usuarioEncontrado.setCorreo(usuarioDTORequest.correo());
-        usuarioEncontrado.setClave(passwordEncoder.encode(usuarioDTORequest.clave()));
+        if (usuarioDTORequest.clave() != null && !usuarioDTORequest.clave().isBlank()) {
+            usuarioEncontrado.setClave(passwordEncoder.encode(usuarioDTORequest.clave()));
+        }
         usuarioEncontrado.setRol(Rol.valueOf(usuarioDTORequest.rol()));
         return usuarioMapper.toDto(usuarioRepository.save(usuarioEncontrado));
     }
