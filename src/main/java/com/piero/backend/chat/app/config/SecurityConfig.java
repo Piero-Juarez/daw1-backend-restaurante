@@ -37,11 +37,10 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(req ->
+                .authorizeHttpRequests(req -> req
                         // Endpoints públicos
-                        req.requestMatchers(
-                                "api/auth/**"
-                        ).permitAll()
+                        .requestMatchers("api/auth/**").permitAll()
+                        .requestMatchers("/websocket/**").permitAll()
 
                         // Lo demás requiere autenticación
                         .anyRequest().authenticated()
