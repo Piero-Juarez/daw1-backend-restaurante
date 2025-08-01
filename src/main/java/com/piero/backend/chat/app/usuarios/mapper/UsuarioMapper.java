@@ -1,5 +1,6 @@
 package com.piero.backend.chat.app.usuarios.mapper;
 
+import com.piero.backend.chat.app.config.AppUtils;
 import com.piero.backend.chat.app.usuarios.dto.UsuarioDTORequest;
 import com.piero.backend.chat.app.usuarios.dto.UsuarioDTOResponse;
 import com.piero.backend.chat.app.usuarios.model.Usuario;
@@ -24,7 +25,7 @@ public class UsuarioMapper {
                 .nombre(usuario.getNombre())
                 .apellido(usuario.getApellido())
                 .correo(usuario.getCorreo())
-                .rol(capitalizar(usuario.getRol().name()))
+                .rol(AppUtils.capitalizarTexto(usuario.getRol().name()))
                 .build();
     }
 
@@ -45,9 +46,11 @@ public class UsuarioMapper {
                 .build();
     }
 
+    /*
     public static String capitalizar(String texto) {
         if (texto == null || texto.isBlank()) { return texto; }
         return texto.substring(0, 1).toUpperCase() + texto.substring(1).toLowerCase();
     }
+     */
 
 }
