@@ -22,7 +22,7 @@ public class Categoria {
 
     @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
-    private List<Plato> platos;
+    private List<ItemMenu> itemMenus;
 
 
 
