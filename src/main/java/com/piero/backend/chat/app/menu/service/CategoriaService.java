@@ -1,7 +1,7 @@
-package com.piero.backend.chat.app.platos.service;
+package com.piero.backend.chat.app.menu.service;
 
-import com.piero.backend.chat.app.platos.dto.categoria.CategoriaDTORequest;
-import com.piero.backend.chat.app.platos.dto.categoria.CategoriaDTOResponse;
+import com.piero.backend.chat.app.menu.dto.categoria.CategoriaDTORequest;
+import com.piero.backend.chat.app.menu.dto.categoria.CategoriaDTOResponse;
 
 import java.util.List;
 

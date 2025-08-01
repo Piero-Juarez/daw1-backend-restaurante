@@ -1,11 +1,11 @@
-package com.piero.backend.chat.app.platos.service.impl;
+package com.piero.backend.chat.app.menu.service.impl;
 
-import com.piero.backend.chat.app.platos.dto.categoria.CategoriaDTORequest;
-import com.piero.backend.chat.app.platos.dto.categoria.CategoriaDTOResponse;
-import com.piero.backend.chat.app.platos.mapper.CategoriaMapper;
-import com.piero.backend.chat.app.platos.model.Categoria;
-import com.piero.backend.chat.app.platos.repository.CategoriaRepository;
-import com.piero.backend.chat.app.platos.service.CategoriaService;
+import com.piero.backend.chat.app.menu.dto.categoria.CategoriaDTORequest;
+import com.piero.backend.chat.app.menu.dto.categoria.CategoriaDTOResponse;
+import com.piero.backend.chat.app.menu.mapper.CategoriaMapper;
+import com.piero.backend.chat.app.menu.model.Categoria;
+import com.piero.backend.chat.app.menu.repository.CategoriaRepository;
+import com.piero.backend.chat.app.menu.service.CategoriaService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

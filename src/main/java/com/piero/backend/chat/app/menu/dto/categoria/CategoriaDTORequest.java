@@ -1,4 +1,4 @@
-package com.piero.backend.chat.app.platos.dto.categoria;
+package com.piero.backend.chat.app.menu.dto.categoria;
 
 public record CategoriaDTORequest(
     String nombre,

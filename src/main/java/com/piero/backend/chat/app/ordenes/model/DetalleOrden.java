@@ -1,6 +1,6 @@
 package com.piero.backend.chat.app.ordenes.model;
 
-import com.piero.backend.chat.app.platos.model.ItemMenu;
+import com.piero.backend.chat.app.menu.model.ItemMenu;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Value;

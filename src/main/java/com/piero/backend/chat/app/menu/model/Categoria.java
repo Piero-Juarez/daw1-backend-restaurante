@@ -1,4 +1,4 @@
-package com.piero.backend.chat.app.platos.model;
+package com.piero.backend.chat.app.menu.model;
 
 import jakarta.persistence.*;
 import lombok.*;

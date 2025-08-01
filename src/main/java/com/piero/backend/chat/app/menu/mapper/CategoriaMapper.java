@@ -1,8 +1,8 @@
-package com.piero.backend.chat.app.platos.mapper;
+package com.piero.backend.chat.app.menu.mapper;
 
-import com.piero.backend.chat.app.platos.dto.categoria.CategoriaDTORequest;
-import com.piero.backend.chat.app.platos.dto.categoria.CategoriaDTOResponse;
-import com.piero.backend.chat.app.platos.model.Categoria;
+import com.piero.backend.chat.app.menu.dto.categoria.CategoriaDTORequest;
+import com.piero.backend.chat.app.menu.dto.categoria.CategoriaDTOResponse;
+import com.piero.backend.chat.app.menu.model.Categoria;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

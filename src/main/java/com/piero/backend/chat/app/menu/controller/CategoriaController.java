@@ -1,8 +1,8 @@
-package com.piero.backend.chat.app.platos.controller;
+package com.piero.backend.chat.app.menu.controller;
 
-import com.piero.backend.chat.app.platos.dto.categoria.CategoriaDTORequest;
-import com.piero.backend.chat.app.platos.dto.categoria.CategoriaDTOResponse;
-import com.piero.backend.chat.app.platos.service.CategoriaService;
+import com.piero.backend.chat.app.menu.dto.categoria.CategoriaDTORequest;
+import com.piero.backend.chat.app.menu.dto.categoria.CategoriaDTOResponse;
+import com.piero.backend.chat.app.menu.service.CategoriaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
