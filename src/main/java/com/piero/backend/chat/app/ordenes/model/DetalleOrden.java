@@ -1,6 +1,6 @@
 package com.piero.backend.chat.app.ordenes.model;
 
-import com.piero.backend.chat.app.platos.model.Plato;
+import com.piero.backend.chat.app.platos.model.ItemMenu;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,7 +26,7 @@ public class DetalleOrden {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "plato_id", nullable = false)
     @ToString.Exclude
-    private Plato plato;
+    private ItemMenu itemMenu;
 
     private Integer cantidad;
 
