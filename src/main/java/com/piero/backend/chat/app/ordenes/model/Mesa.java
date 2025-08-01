@@ -1,7 +1,6 @@
 package com.piero.backend.chat.app.ordenes.model;
 
 import com.piero.backend.chat.app.ordenes.model.enums.EstadoMesa;
-import com.piero.backend.chat.app.ordenes.model.enums.EstadoOrden;
 import jakarta.persistence.*;
 import lombok.*;
 
