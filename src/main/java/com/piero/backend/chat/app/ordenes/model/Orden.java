@@ -1,5 +1,6 @@
 package com.piero.backend.chat.app.ordenes.model;
 
+import com.piero.backend.chat.app.ordenes.model.enums.EstadoOrden;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,10 +29,8 @@ public class Orden {
     @ToString.Exclude
     private Mesa mesa;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "estado_id", nullable = false)
-    @ToString.Exclude
-    private Estado estado;
+    @Enumerated(EnumType.STRING)
+    private EstadoOrden estado;
 
     @Column(name = "fecha_creacion")
     private LocalDateTime fechaCreacion;
