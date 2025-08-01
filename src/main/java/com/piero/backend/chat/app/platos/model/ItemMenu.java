@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "platos")
-public class Plato {
+public class ItemMenu {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,7 +29,7 @@ public class Plato {
     @ToString.Exclude
     private Categoria categoria;
 
-    @OneToMany(mappedBy = "plato")
+    @OneToMany(mappedBy = "itemMenu")
     @ToString.Exclude
     private List<DetalleOrden> detalles;
 
