@@ -1,9 +1,8 @@
 package com.piero.backend.chat.app.ordenes.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.piero.backend.chat.app.ordenes.model.enums.EstadoMesa;
+import com.piero.backend.chat.app.ordenes.model.enums.EstadoOrden;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
@@ -20,7 +19,9 @@ public class Mesa {
     private Short id;
     private String numero;
     private Short capacidad;
-    private Boolean ocupada;
-    private Boolean activo;
+
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private EstadoMesa estado = EstadoMesa.LIBRE;
 
 }
