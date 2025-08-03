@@ -8,4 +8,6 @@ import java.util.List;
 @Repository
 public interface ItemMenuRepository extends JpaRepository<ItemMenu, Integer> {
     List<ItemMenu> findItemMenuByActivo(boolean activo);
+
+    ItemMenu findByNombre(String nombre);
 }

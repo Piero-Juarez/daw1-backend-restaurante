@@ -8,6 +8,6 @@ public record ItemMenuDTORequest(
     Double precio,
     File imagen,
     String nombreImagen,
-    Integer idCategoria
+    Short idCategoria
 ) {
 }
