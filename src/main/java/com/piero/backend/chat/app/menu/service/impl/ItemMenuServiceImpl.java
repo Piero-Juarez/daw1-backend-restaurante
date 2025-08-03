@@ -20,7 +20,7 @@ public class ItemMenuServiceImpl implements ItemMenuService {
     private final CategoriaRepository categoriaRepository;
     @Override
     public List<ItemMenuDTOResponse> listarItemMenusActivo() {
-        return itemMenuMapper.listToDtoResponse(itemMenuRepository.findAll());
+        return itemMenuMapper.listToDtoResponse(itemMenuRepository.findItemMenuByActivo(true));
     }
 
     @Override
@@ -29,6 +29,7 @@ public class ItemMenuServiceImpl implements ItemMenuService {
 
         itemMenu.setCategoria(categoriaRepository.findById(itemMenuDTORequest.idCategoria())
                 .orElseThrow(()-> new EntityNotFoundException("Categoria no encontrada")));
+        itemMenu.setActivo(true);
         //añadir el guardado de imagen
         itemMenuRepository.save(itemMenu);
 
@@ -58,9 +59,11 @@ public class ItemMenuServiceImpl implements ItemMenuService {
         return itemMenuMapper.toDtoResponse(itemMenu);
     }
 
-
     @Override
     public void eliminarItemMenu(Integer id) {
-        itemMenuRepository.deleteById(id);
+        ItemMenu itemMenuEliminar = itemMenuRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("ItemMenu no encontrada"));
+        itemMenuEliminar.setActivo(false);
+        itemMenuRepository.save(itemMenuEliminar);
     }
 }
