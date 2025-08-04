@@ -19,13 +19,14 @@ public class CategoriaServiceImpl implements CategoriaService {
     private final CategoriaMapper categoriaMapper;
     @Override
     public List<CategoriaDTOResponse> listarCategorias() {
-        return categoriaMapper.listToDto(categoriaRepository.findAll());
+        return categoriaMapper.listToDto(categoriaRepository.findAllByActivo(true));
     }
 
     @Override
     public CategoriaDTOResponse guardarCategoria(CategoriaDTORequest categoriaRequest) {
-        Categoria categoria = categoriaRepository.save(categoriaMapper.RequestToEntity(categoriaRequest));
-        return categoriaMapper.toDtoResponse(categoria);
+        Categoria categoria = categoriaMapper.RequestToEntity(categoriaRequest);
+        categoria.setActivo(true);
+        return categoriaMapper.toDtoResponse(categoriaRepository.save(categoria));
     }
 
     @Override
@@ -45,6 +46,9 @@ public class CategoriaServiceImpl implements CategoriaService {
 
     @Override
     public void eliminarCategoria(Short idCategoria) {
-        categoriaRepository.deleteById(idCategoria);
+        Categoria categoria = categoriaRepository.findById(idCategoria)
+                .orElseThrow(() -> new EntityNotFoundException("Categoria no encontrada"));
+        categoria.eliminarItemMenuAsociado();
+        categoriaRepository.save(categoria);
     }
 }

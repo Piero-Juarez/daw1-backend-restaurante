@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -22,7 +21,7 @@ public class ItemMenuMapper {
                 .nombreItemMenu(itemMenu.getNombre())
                 .descripcionItemMenu(itemMenu.getDescripcion())
                 .precioItemMenu(itemMenu.getPrecio())
-                .nombreImagenItemMenu(itemMenu.getImagen())
+                .nombreImagenItemMenu(itemMenu.getNombreImagen())
                 .categoriaDTOResponse(categoriaMapper.toDtoResponse(itemMenu.getCategoria()))
                 .build();
     }
@@ -32,7 +31,7 @@ public class ItemMenuMapper {
                 .descripcion(itemMenuDTORequest.descripcion())
                 .precio(itemMenuDTORequest.precio())
                 //La imagen sera guardada desed el service
-                .imagen(itemMenuDTORequest.nombreImagen())
+                .nombreImagen(itemMenuDTORequest.nombreImagen())
                 //La categoria sera insertada desde el service
                 .build();
     }

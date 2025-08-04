@@ -30,7 +30,6 @@ public class ItemMenuServiceImpl implements ItemMenuService {
         itemMenu.setCategoria(categoriaRepository.findById(itemMenuDTORequest.idCategoria())
                 .orElseThrow(()-> new EntityNotFoundException("Categoria no encontrada")));
         itemMenu.setActivo(true);
-        //añadir el guardado de imagen
         itemMenuRepository.save(itemMenu);
 
         return itemMenuMapper.toDtoResponse(itemMenu);
@@ -49,7 +48,7 @@ public class ItemMenuServiceImpl implements ItemMenuService {
         itemMenu.setNombre(itemMenuDTORequest.nombre());
         itemMenu.setDescripcion(itemMenuDTORequest.descripcion());
         itemMenu.setPrecio(itemMenuDTORequest.precio());
-        itemMenu.setImagen(itemMenuDTORequest.nombreImagen());
+        itemMenu.setNombreImagen(itemMenuDTORequest.nombreImagen());
 
         itemMenu.setCategoria(categoriaRepository.findById(itemMenuDTORequest.idCategoria())
                 .orElseThrow(() -> new EntityNotFoundException("Categoría no encontrada")));
@@ -57,6 +56,12 @@ public class ItemMenuServiceImpl implements ItemMenuService {
         itemMenuRepository.save(itemMenu);
 
         return itemMenuMapper.toDtoResponse(itemMenu);
+    }
+
+    @Override
+    public ItemMenuDTOResponse buscarItemMenuPorId(Integer id) {
+        return itemMenuMapper.toDtoResponse(itemMenuRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("ItemMenu no encontrada")));
     }
 
     @Override

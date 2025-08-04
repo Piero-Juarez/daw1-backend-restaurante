@@ -9,5 +9,6 @@ public interface ItemMenuService {
     ItemMenuDTOResponse guardarItemMenu(ItemMenuDTORequest itemMenuDTORequest);
     ItemMenuDTOResponse buscarItemMenuPorNombre(String nombre);
     ItemMenuDTOResponse actualizarItemMenu(Integer id, ItemMenuDTORequest itemMenuDTORequest);
+    ItemMenuDTOResponse buscarItemMenuPorId(Integer id);
     void eliminarItemMenu(Integer id);
 }

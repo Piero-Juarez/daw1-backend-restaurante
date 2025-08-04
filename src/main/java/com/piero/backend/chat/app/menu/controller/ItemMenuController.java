@@ -24,9 +24,17 @@ public class ItemMenuController {
     public ResponseEntity<ItemMenuDTOResponse>  agregarItemMenu(@RequestBody ItemMenuDTORequest itemMenuDTORequest){
         return ResponseEntity.status(HttpStatus.CREATED).body(itemMenuService.guardarItemMenu(itemMenuDTORequest));
     }
-    @GetMapping("/{nombre}")
+    @GetMapping("buscar/{nombre}")
     public ResponseEntity<ItemMenuDTOResponse>  buscarItemMenuPorNombre(@PathVariable String nombre){
         ItemMenuDTOResponse result = itemMenuService.buscarItemMenuPorNombre(nombre);
+        if (result == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(result);
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<ItemMenuDTOResponse>  buscarItemMenuPorId(@PathVariable Integer id){
+        ItemMenuDTOResponse result = itemMenuService.buscarItemMenuPorId(id);
         if (result == null) {
             return ResponseEntity.notFound().build();
         }
