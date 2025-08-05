@@ -10,7 +10,7 @@ public record ItemMenuDTOResponse(
     String descripcionItemMenu,
     Double precioItemMenu,
     String nombreImagenItemMenu,
-    CategoriaDTOResponse categoriaDTOResponse
-
+    CategoriaDTOResponse categoriaDTOResponse,
+    String estado
 ) {
 }

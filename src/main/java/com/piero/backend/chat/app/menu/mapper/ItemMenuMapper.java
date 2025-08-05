@@ -3,6 +3,8 @@ package com.piero.backend.chat.app.menu.mapper;
 import com.piero.backend.chat.app.menu.dto.itemmenu.ItemMenuDTORequest;
 import com.piero.backend.chat.app.menu.dto.itemmenu.ItemMenuDTOResponse;
 import com.piero.backend.chat.app.menu.model.ItemMenu;
+import com.piero.backend.chat.app.menu.model.enums.EstadoItemMenu;
+import jakarta.persistence.EnumType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +25,7 @@ public class ItemMenuMapper {
                 .precioItemMenu(itemMenu.getPrecio())
                 .nombreImagenItemMenu(itemMenu.getNombreImagen())
                 .categoriaDTOResponse(categoriaMapper.toDtoResponse(itemMenu.getCategoria()))
+                .estado(itemMenu.getEstado().name())
                 .build();
     }
     public ItemMenu RequestToEntity(ItemMenuDTORequest itemMenuDTORequest){
@@ -32,6 +35,7 @@ public class ItemMenuMapper {
                 .precio(itemMenuDTORequest.precio())
                 //La imagen sera guardada desed el service
                 .nombreImagen(itemMenuDTORequest.nombreImagen())
+                .estado(EstadoItemMenu.valueOf(itemMenuDTORequest.estado().toUpperCase()))
                 //La categoria sera insertada desde el service
                 .build();
     }

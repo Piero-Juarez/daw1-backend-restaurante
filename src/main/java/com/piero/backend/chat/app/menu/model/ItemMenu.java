@@ -1,5 +1,6 @@
 package com.piero.backend.chat.app.menu.model;
 
+import com.piero.backend.chat.app.menu.model.enums.EstadoItemMenu;
 import com.piero.backend.chat.app.ordenes.model.DetalleOrden;
 import jakarta.persistence.*;
 import lombok.*;
@@ -32,7 +33,8 @@ public class ItemMenu {
     @OneToMany(mappedBy = "itemMenu")
     @ToString.Exclude
     private List<DetalleOrden> detalles;
-
+    @Enumerated(EnumType.STRING)
+    private EstadoItemMenu  estado = EstadoItemMenu.DISPONIBLE;
     private Boolean activo;
 
 }

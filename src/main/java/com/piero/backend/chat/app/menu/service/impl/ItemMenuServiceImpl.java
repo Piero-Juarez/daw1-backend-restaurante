@@ -4,6 +4,7 @@ import com.piero.backend.chat.app.menu.dto.itemmenu.ItemMenuDTORequest;
 import com.piero.backend.chat.app.menu.dto.itemmenu.ItemMenuDTOResponse;
 import com.piero.backend.chat.app.menu.mapper.ItemMenuMapper;
 import com.piero.backend.chat.app.menu.model.ItemMenu;
+import com.piero.backend.chat.app.menu.model.enums.EstadoItemMenu;
 import com.piero.backend.chat.app.menu.repository.CategoriaRepository;
 import com.piero.backend.chat.app.menu.repository.ItemMenuRepository;
 import com.piero.backend.chat.app.menu.service.ItemMenuService;
@@ -62,6 +63,15 @@ public class ItemMenuServiceImpl implements ItemMenuService {
     public ItemMenuDTOResponse buscarItemMenuPorId(Integer id) {
         return itemMenuMapper.toDtoResponse(itemMenuRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("ItemMenu no encontrada")));
+    }
+
+    @Override
+    public ItemMenuDTOResponse cambiarEstadoItemMenu(Integer id, String estado) {
+        ItemMenu itemMenuBuscado = itemMenuRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("ItemMenu no encontrada"));
+        itemMenuBuscado.setEstado(EstadoItemMenu.valueOf(estado.toUpperCase()));
+        itemMenuRepository.save(itemMenuBuscado);
+        return itemMenuMapper.toDtoResponse(itemMenuBuscado);
     }
 
     @Override

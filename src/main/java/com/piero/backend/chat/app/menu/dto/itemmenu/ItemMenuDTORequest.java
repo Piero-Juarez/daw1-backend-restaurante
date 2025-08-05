@@ -7,6 +7,7 @@ public record ItemMenuDTORequest(
     String descripcion,
     Double precio,
     String nombreImagen,
-    Short idCategoria
+    Short idCategoria,
+    String estado
 ) {
 }
