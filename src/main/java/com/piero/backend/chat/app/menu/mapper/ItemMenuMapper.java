@@ -1,46 +1,47 @@
 package com.piero.backend.chat.app.menu.mapper;
 
+import com.piero.backend.chat.app.config.AppUtils;
 import com.piero.backend.chat.app.menu.dto.itemmenu.ItemMenuDTORequest;
 import com.piero.backend.chat.app.menu.dto.itemmenu.ItemMenuDTOResponse;
 import com.piero.backend.chat.app.menu.model.ItemMenu;
 import com.piero.backend.chat.app.menu.model.enums.EstadoItemMenu;
-import jakarta.persistence.EnumType;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
 public class ItemMenuMapper {
-    private final CategoriaMapper categoriaMapper;
 
+    private final CategoriaMapper categoriaMapper;
 
     public ItemMenuDTOResponse toDtoResponse (ItemMenu itemMenu){
         return ItemMenuDTOResponse
                 .builder()
-                .idItemMenu(itemMenu.getId())
-                .nombreItemMenu(itemMenu.getNombre())
-                .descripcionItemMenu(itemMenu.getDescripcion())
-                .precioItemMenu(itemMenu.getPrecio())
-                .nombreImagenItemMenu(itemMenu.getNombreImagen())
-                .categoriaDTOResponse(categoriaMapper.toDtoResponse(itemMenu.getCategoria()))
-                .estado(itemMenu.getEstado().name())
+                .id(itemMenu.getId())
+                .nombre(itemMenu.getNombre())
+                .descripcion(itemMenu.getDescripcion())
+                .precio(itemMenu.getPrecio())
+                .enlaceImagen(itemMenu.getEnlaceImagen())
+                .categoria(categoriaMapper.toDtoResponse(itemMenu.getCategoria()))
+                .estado(AppUtils.capitalizarTexto(itemMenu.getEstado().name()))
                 .build();
     }
+
     public ItemMenu RequestToEntity(ItemMenuDTORequest itemMenuDTORequest){
         return ItemMenu.builder()
                 .nombre(itemMenuDTORequest.nombre())
                 .descripcion(itemMenuDTORequest.descripcion())
                 .precio(itemMenuDTORequest.precio())
                 //La imagen sera guardada desed el service
-                .nombreImagen(itemMenuDTORequest.nombreImagen())
+                .enlaceImagen(itemMenuDTORequest.enlaceImagen())
                 .estado(EstadoItemMenu.valueOf(itemMenuDTORequest.estado().toUpperCase()))
                 //La categoria sera insertada desde el service
                 .build();
     }
-    public List<ItemMenuDTOResponse> listToDtoResponse (List<ItemMenu> itemMenu){
-        return itemMenu.stream().map(this::toDtoResponse).toList();
+
+    public Page<ItemMenuDTOResponse> listToDtoResponse (Page<ItemMenu> itemMenuPage){
+        return itemMenuPage.map(this::toDtoResponse);
     }
 
 }
