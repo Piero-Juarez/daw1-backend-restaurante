@@ -15,12 +15,15 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/categorias")
 public class CategoriaController {
+
     private final CategoriaService categoriaService;
     private final SimpMessagingTemplate messagingTemplate;
+
     @GetMapping()
     public ResponseEntity<List<CategoriaDTOResponse>> listarCategorias() {
         return ResponseEntity.ok(categoriaService.listarCategorias());
     }
+
     @GetMapping("/{id}")
     public ResponseEntity<CategoriaDTOResponse>obtenerCategoria(@PathVariable Short id) {
         return ResponseEntity.ok(categoriaService.obtenerCategoriaPorId(id));
@@ -32,16 +35,19 @@ public class CategoriaController {
         messagingTemplate.convertAndSend("/topic/categorias", categoriaDTOResponse);
         return ResponseEntity.status(HttpStatus.CREATED).body(categoriaDTOResponse);
     }
+
     @PutMapping("/{id}")
     public ResponseEntity<CategoriaDTOResponse> actualizarCategoria(@PathVariable Short id, @RequestBody CategoriaDTORequest categoriaDTORequest) {
         CategoriaDTOResponse categoriaDtoResponse =  categoriaService.actualizarCategoria(id, categoriaDTORequest);
         messagingTemplate.convertAndSend("/topic/categorias", categoriaDtoResponse);
         return ResponseEntity.ok(categoriaDtoResponse);
     }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminarCategoria(@PathVariable Short id) {
         categoriaService.eliminarCategoria(id);
         messagingTemplate.convertAndSend("/topic/categorias/eliminado", id);
         return ResponseEntity.noContent().build();
     }
+
 }
