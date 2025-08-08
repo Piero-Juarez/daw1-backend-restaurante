@@ -2,14 +2,13 @@ package com.piero.backend.chat.app.menu.service;
 
 import com.piero.backend.chat.app.menu.dto.itemmenu.ItemMenuDTORequest;
 import com.piero.backend.chat.app.menu.dto.itemmenu.ItemMenuDTOResponse;
-import com.piero.backend.chat.app.menu.model.enums.EstadoItemMenu;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface ItemMenuService {
-    List<ItemMenuDTOResponse> listarItemMenusActivo();
+    Page<ItemMenuDTOResponse> listarItemMenusActivo(Pageable pageable);
     ItemMenuDTOResponse guardarItemMenu(ItemMenuDTORequest itemMenuDTORequest);
-    ItemMenuDTOResponse buscarItemMenuPorNombre(String nombre);
+    Page<ItemMenuDTOResponse> buscarItemsMenu(String nombre, String nombreCategoria, Pageable pageable);
     ItemMenuDTOResponse actualizarItemMenu(Integer id, ItemMenuDTORequest itemMenuDTORequest);
     ItemMenuDTOResponse buscarItemMenuPorId(Integer id);
     ItemMenuDTOResponse cambiarEstadoItemMenu(Integer id, String estado);
