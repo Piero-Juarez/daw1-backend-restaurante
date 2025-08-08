@@ -14,7 +14,8 @@ import java.util.Objects;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "tokens")
+@Entity
+@Table(name = "tokens")
 public class Token {
 
     @Id
