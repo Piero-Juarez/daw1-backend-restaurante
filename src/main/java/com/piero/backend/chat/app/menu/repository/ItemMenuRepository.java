@@ -1,13 +1,27 @@
 package com.piero.backend.chat.app.menu.repository;
 
 import com.piero.backend.chat.app.menu.model.ItemMenu;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 @Repository
 public interface ItemMenuRepository extends JpaRepository<ItemMenu, Integer> {
-    List<ItemMenu> findItemMenuByActivo(boolean activo);
+    Page<ItemMenu> findItemMenuByActivo(boolean activo, Pageable pageable);
 
-    ItemMenu findByNombre(String nombre);
+    @Query("""
+        SELECT i FROM ItemMenu i WHERE
+            (:nombre IS NULL OR lower(i.nombre) LIKE lower(concat('%', :nombre, '%'))) AND
+            (:nombreCategoria IS NULL OR i.categoria.nombre = :nombreCategoria)
+    """)
+    Page<ItemMenu> buscarItemsMenuDinamicamente(
+            @Param("nombre") String nombre,
+            @Param("nombreCategoria") String nombreCategoria,
+            Pageable pageable
+    );
+
+    //List<ItemMenu> findByCategoria_Id(Short categoriaId);
 }
