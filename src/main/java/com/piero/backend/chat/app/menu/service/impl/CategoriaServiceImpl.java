@@ -46,8 +46,7 @@ public class CategoriaServiceImpl implements CategoriaService {
 
     @Override
     public void eliminarCategoria(Short idCategoria) {
-        Categoria categoria = categoriaRepository.findById(idCategoria)
-                .orElseThrow(() -> new EntityNotFoundException("Categoria no encontrada"));
+        Categoria categoria = categoriaRepository.findById(idCategoria).orElseThrow(() -> new EntityNotFoundException("Categoria no encontrada"));
         categoria.eliminarItemMenuAsociado();
         categoriaRepository.save(categoria);
     }
