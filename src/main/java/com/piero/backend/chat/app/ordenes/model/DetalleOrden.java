@@ -11,7 +11,8 @@ import org.springframework.beans.factory.annotation.Value;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "detalle_ordenes")
+@Entity
+@Table(name = "detalle_ordenes")
 public class DetalleOrden {
 
     @Id

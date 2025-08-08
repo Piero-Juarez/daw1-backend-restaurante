@@ -13,17 +13,22 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "platos")
+@Entity
+@Table(name = "items_menu")
 public class ItemMenu {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(unique = true)
     private String nombre;
+
     private String descripcion;
     private Double precio;
-    private String nombreImagen;
+
+    @Column(name = "enlace_imagen")
+    private String enlaceImagen;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "categoria_id", nullable = false)
@@ -33,8 +38,10 @@ public class ItemMenu {
     @OneToMany(mappedBy = "itemMenu")
     @ToString.Exclude
     private List<DetalleOrden> detalles;
+
     @Enumerated(EnumType.STRING)
     private EstadoItemMenu  estado = EstadoItemMenu.DISPONIBLE;
+
     private Boolean activo;
 
 }

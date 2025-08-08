@@ -1,3 +1,9 @@
 
 -- USUARIO DE PRUEBA (pass: piero123)
+<<<<<<< HEAD
 INSERT INTO restaurante.usuarios (nombre, apellido, correo, clave, rol, activo) VALUES ('Piero', 'Juarez', 'piero@gmail.com', '$2a$12$i9pdKKWCX60c4NKqSs/sS.75.8TLJXbVJbnm0ZJfRq9OLZQL9NR/u', 'ADMINISTRADOR', true)
+=======
+INSERT INTO db_restaurante.usuarios (nombre, apellido, correo, clave, rol, activo) VALUES ('Piero', 'Juarez', 'piero@gmail.com', '$2a$12$i9pdKKWCX60c4NKqSs/sS.75.8TLJXbVJbnm0ZJfRq9OLZQL9NR/u', 'ADMINISTRADOR', true);
+INSERT INTO db_restaurante.categorias_items (activo, descripcion, nombre) VALUES (true, 'Delicosas hamburguesas jugosas', 'Hamburguesas'), (true, 'Refrescantes bebidas gaseosas de siempre', 'Gaseosas'), (true, 'Platillos del norte que te harán babear', 'Comida Norteña');
+INSERT INTO db_restaurante.items_menu (activo, categoria_id, precio, descripcion, nombre, enlace_imagen, estado) VALUES (true, 1, 14, 'Hamburguesa triple parrillera ahumada al carbón', 'Hamburguesa Parrillera', 'https://i.ibb.co/Pzt1Zb2V/3-DLCu5-Wt2-Nmyqbc-E5-1080-x.webp', 'DISPONIBLE'), (true, 2, 3.5, 'Gaseosa con sabor a hierba luisa', 'Inka Kola 1L', 'https://i.ibb.co/VckFj98Z/20111231.webp', 'DISPONIBLE'), (true, 2, 6, 'Gaseosa con sabor a hierba luisa', 'Inka Kola 2.5L', 'https://i.ibb.co/Y76CTBcH/20256774.webp', 'DISPONIBLE'), (true, 3, 26, 'Descripción de comida deliciosa', 'Arroz con pollo y crema huancaina', 'https://i.ibb.co/Wv7pK51f/hq720.jpg', 'DISPONIBLE'), (true, 3, 34, 'Descripción de comida deliciosa', 'Frijoles con pollo a la olla', 'https://i.ibb.co/ns6stpNq/sddefault.jpg', 'DISPONIBLE'), (true, 3, 23, 'Descripción de comida deliciosa', 'Seco de pollo con pure de papa', 'https://i.ibb.co/pF5ntFt/maxresdefault.jpg', 'DISPONIBLE');
+>>>>>>> 1200ea85d5eb59be3153e597466232612856022e

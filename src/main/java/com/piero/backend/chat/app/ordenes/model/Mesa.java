@@ -10,7 +10,8 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "mesas")
+@Entity
+@Table(name = "mesas")
 public class Mesa {
 
     @Id
