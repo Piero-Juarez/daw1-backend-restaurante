@@ -15,6 +15,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ItemMenuServiceImpl implements ItemMenuService {
@@ -86,6 +88,15 @@ public class ItemMenuServiceImpl implements ItemMenuService {
         ItemMenu itemMenuEliminar = itemMenuRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("ItemMenu no encontrada"));
         itemMenuEliminar.setActivo(false);
         itemMenuRepository.save(itemMenuEliminar);
+    }
+    @Override
+    @Transactional(readOnly = true)
+    public List<ItemMenu> buscarPorCategoriaYPrecio(Short categoriaId, Double precioMax) {
+        return itemMenuRepository.findByCategoria_IdAndActivoTrueAndEstadoAndPrecioLessThanEqual(
+                categoriaId,
+                EstadoItemMenu.DISPONIBLE,
+                precioMax
+        );
     }
 
 }

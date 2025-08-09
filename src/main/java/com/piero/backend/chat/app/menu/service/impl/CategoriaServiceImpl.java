@@ -9,8 +9,10 @@ import com.piero.backend.chat.app.menu.service.CategoriaService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -49,5 +51,15 @@ public class CategoriaServiceImpl implements CategoriaService {
         Categoria categoria = categoriaRepository.findById(idCategoria).orElseThrow(() -> new EntityNotFoundException("Categoria no encontrada"));
         categoria.eliminarItemMenuAsociado();
         categoriaRepository.save(categoria);
+    }
+    @Override
+    @Transactional(readOnly = true)
+    public List<Categoria> obtenerCategoriasActivas() {
+        return categoriaRepository.findByActivoTrue();
+    }
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<Categoria> buscarPorId(Short id) {
+        return categoriaRepository.findById(id);
     }
 }

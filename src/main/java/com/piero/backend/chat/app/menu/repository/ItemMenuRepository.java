@@ -1,12 +1,15 @@
 package com.piero.backend.chat.app.menu.repository;
 
 import com.piero.backend.chat.app.menu.model.ItemMenu;
+import com.piero.backend.chat.app.menu.model.enums.EstadoItemMenu;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface ItemMenuRepository extends JpaRepository<ItemMenu, Integer> {
@@ -22,6 +25,10 @@ public interface ItemMenuRepository extends JpaRepository<ItemMenu, Integer> {
             @Param("nombreCategoria") String nombreCategoria,
             Pageable pageable
     );
-
+    List<ItemMenu> findByCategoria_IdAndActivoTrueAndEstadoAndPrecioLessThanEqual(
+            Short categoriaId,
+            EstadoItemMenu estado,
+            Double precioMax
+    );
     //List<ItemMenu> findByCategoria_Id(Short categoriaId);
 }
