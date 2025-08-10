@@ -1,5 +1,6 @@
 package com.piero.backend.chat.app.menu.service.impl;
 
+import com.piero.backend.chat.app.exception.BusinessError;
 import com.piero.backend.chat.app.menu.dto.categoria.CategoriaDTORequest;
 import com.piero.backend.chat.app.menu.dto.categoria.CategoriaDTOResponse;
 import com.piero.backend.chat.app.menu.mapper.CategoriaMapper;
@@ -24,6 +25,9 @@ public class CategoriaServiceImpl implements CategoriaService {
 
     @Override
     public CategoriaDTOResponse guardarCategoria(CategoriaDTORequest categoriaRequest) {
+        if (categoriaRepository.existsCategoriaByNombre(categoriaRequest.nombre())) {
+            throw new BusinessError("El nombre de la categoría ya existe. Debe ingresar uno nuevo.");
+        }
         Categoria categoria = categoriaMapper.RequestToEntity(categoriaRequest);
         categoria.setActivo(true);
         return categoriaMapper.toDtoResponse(categoriaRepository.save(categoria));
