@@ -1,5 +1,6 @@
 package com.piero.backend.chat.app.menu.service;
 
+import com.piero.backend.chat.app.menu.dto.itemmenu.EstadoItemMenuDtoRequest;
 import com.piero.backend.chat.app.menu.dto.itemmenu.ItemMenuDTORequest;
 import com.piero.backend.chat.app.menu.dto.itemmenu.ItemMenuDTOResponse;
 import org.springframework.data.domain.Page;
@@ -11,6 +12,6 @@ public interface ItemMenuService {
     Page<ItemMenuDTOResponse> buscarItemsMenu(String nombre, String nombreCategoria, Pageable pageable);
     ItemMenuDTOResponse actualizarItemMenu(Integer id, ItemMenuDTORequest itemMenuDTORequest);
     ItemMenuDTOResponse buscarItemMenuPorId(Integer id);
-    ItemMenuDTOResponse cambiarEstadoItemMenu(Integer id, String estado);
+    ItemMenuDTOResponse cambiarEstadoItemMenu(Integer id, EstadoItemMenuDtoRequest dto);
     void eliminarItemMenu(Integer id);
 }

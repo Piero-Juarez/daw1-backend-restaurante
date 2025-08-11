@@ -1,8 +1,11 @@
 package com.piero.backend.chat.app.menu.service.impl;
 
+import com.piero.backend.chat.app.exception.BusinessError;
+import com.piero.backend.chat.app.menu.dto.itemmenu.EstadoItemMenuDtoRequest;
 import com.piero.backend.chat.app.menu.dto.itemmenu.ItemMenuDTORequest;
 import com.piero.backend.chat.app.menu.dto.itemmenu.ItemMenuDTOResponse;
 import com.piero.backend.chat.app.menu.mapper.ItemMenuMapper;
+import com.piero.backend.chat.app.menu.model.Categoria;
 import com.piero.backend.chat.app.menu.model.ItemMenu;
 import com.piero.backend.chat.app.menu.model.enums.EstadoItemMenu;
 import com.piero.backend.chat.app.menu.repository.CategoriaRepository;
@@ -32,12 +35,15 @@ public class ItemMenuServiceImpl implements ItemMenuService {
     @Override
     @Transactional
     public ItemMenuDTOResponse guardarItemMenu(ItemMenuDTORequest itemMenuDTORequest) {
-        ItemMenu itemMenu = itemMenuMapper.RequestToEntity(itemMenuDTORequest);
+        Categoria categoriaElegida = categoriaRepository.findById(itemMenuDTORequest.idCategoria())
+                .orElseThrow(()-> new BusinessError("Categoria no encontrada con id: " + itemMenuDTORequest.idCategoria()));
 
-        itemMenu.setCategoria(categoriaRepository.findById(itemMenuDTORequest.idCategoria()).orElseThrow(()-> new EntityNotFoundException("Categoria no encontrada")));
+        controlErrores(itemMenuDTORequest, categoriaElegida);
+
+        ItemMenu itemMenu = itemMenuMapper.RequestToEntity(itemMenuDTORequest);
+        itemMenu.setCategoria(categoriaElegida);
         itemMenu.setActivo(true);
         itemMenuRepository.save(itemMenu);
-
         return itemMenuMapper.toDtoResponse(itemMenu);
     }
 
@@ -51,14 +57,18 @@ public class ItemMenuServiceImpl implements ItemMenuService {
     @Override
     @Transactional
     public ItemMenuDTOResponse actualizarItemMenu(Integer idMenu, ItemMenuDTORequest itemMenuDTORequest) {
-        ItemMenu itemMenu = itemMenuRepository.findById(idMenu).orElseThrow(() -> new EntityNotFoundException("ItemMenu no encontrada"));
+        ItemMenu itemMenu = itemMenuRepository.findById(idMenu)
+                .orElseThrow(() -> new BusinessError("ItemMenu no encontrada con id: "+idMenu));
+        Categoria categoriaElegida = categoriaRepository.findById(itemMenuDTORequest.idCategoria())
+                .orElseThrow(()-> new BusinessError("Categoria no encontrada con id: " + itemMenuDTORequest.idCategoria()));
+
+        controlErrores(itemMenuDTORequest, categoriaElegida);
 
         itemMenu.setNombre(itemMenuDTORequest.nombre());
         itemMenu.setDescripcion(itemMenuDTORequest.descripcion());
         itemMenu.setPrecio(itemMenuDTORequest.precio());
         itemMenu.setEnlaceImagen(itemMenuDTORequest.enlaceImagen());
-
-        itemMenu.setCategoria(categoriaRepository.findById(itemMenuDTORequest.idCategoria()).orElseThrow(() -> new EntityNotFoundException("Categoría no encontrada")));
+        itemMenu.setCategoria(categoriaElegida);
         //añadir el guardado de imagen
         itemMenuRepository.save(itemMenu);
 
@@ -68,14 +78,16 @@ public class ItemMenuServiceImpl implements ItemMenuService {
     @Override
     @Transactional(readOnly = true)
     public ItemMenuDTOResponse buscarItemMenuPorId(Integer id) {
-        return itemMenuMapper.toDtoResponse(itemMenuRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("ItemMenu no encontrada")));
+        return itemMenuMapper.toDtoResponse(itemMenuRepository.findById(id)
+                .orElseThrow(() -> new BusinessError("ItemMenu no encontrada con id: "+id)));
     }
 
     @Override
     @Transactional
-    public ItemMenuDTOResponse cambiarEstadoItemMenu(Integer id, String estado) {
-        ItemMenu itemMenuBuscado = itemMenuRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("ItemMenu no encontrada"));
-        itemMenuBuscado.setEstado(EstadoItemMenu.valueOf(estado.toUpperCase()));
+    public ItemMenuDTOResponse cambiarEstadoItemMenu(Integer id, EstadoItemMenuDtoRequest dto) {
+        ItemMenu itemMenuBuscado = itemMenuRepository.findById(id)
+                .orElseThrow(() -> new BusinessError("ItemMenu no encontrada con id: "+id));
+        itemMenuBuscado.setEstado(EstadoItemMenu.valueOf(dto.estado().toUpperCase()));
         itemMenuRepository.save(itemMenuBuscado);
         return itemMenuMapper.toDtoResponse(itemMenuBuscado);
     }
@@ -83,9 +95,20 @@ public class ItemMenuServiceImpl implements ItemMenuService {
     @Override
     @Transactional
     public void eliminarItemMenu(Integer id) {
-        ItemMenu itemMenuEliminar = itemMenuRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("ItemMenu no encontrada"));
+        ItemMenu itemMenuEliminar = itemMenuRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("ItemMenu no encontrada con id: "+id));
         itemMenuEliminar.setActivo(false);
         itemMenuRepository.save(itemMenuEliminar);
     }
 
+    public void controlErrores(ItemMenuDTORequest itemMenuDTORequest, Categoria categoriaElegida) {
+        if(itemMenuDTORequest.precio()<=0){
+            throw new BusinessError("El precio debe ser mayor a S/ 0");
+        }
+        if (itemMenuDTORequest.precio()<categoriaElegida.getPrecioMinimo()){
+            throw new BusinessError("El precio debe ser mayor a S/ " +  categoriaElegida.getPrecioMinimo());
+        }
+        if(itemMenuRepository.existsByNombre(itemMenuDTORequest.nombre())){
+            throw new BusinessError("EL nombre de :" + itemMenuDTORequest.nombre() + " ya existe");
+        }
+    }
 }

@@ -24,4 +24,6 @@ public interface ItemMenuRepository extends JpaRepository<ItemMenu, Integer> {
     );
 
     //List<ItemMenu> findByCategoria_Id(Short categoriaId);
+
+    boolean existsByNombre(String nombre);
 }
