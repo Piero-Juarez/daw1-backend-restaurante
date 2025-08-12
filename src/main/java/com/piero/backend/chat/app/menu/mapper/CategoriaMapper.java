@@ -15,14 +15,15 @@ public class CategoriaMapper {
         return new  CategoriaDTOResponse(
                 categoria.getId(),
                 categoria.getNombre(),
-                categoria.getDescripcion()
+                categoria.getDescripcion(),
+                categoria.getPrecioMinimo()
         );
     }
     public Categoria RequestToEntity(CategoriaDTORequest categoriaDTORequest){
         Categoria categoria = new Categoria();
         categoria.setNombre(categoriaDTORequest.nombre());
         categoria.setDescripcion(categoriaDTORequest.descripcion());
-
+        categoria.setPrecioMinimo(categoriaDTORequest.precioMinimo());
         return categoria;
     }
     public List<CategoriaDTOResponse> listToDto(List<Categoria> categorias) {

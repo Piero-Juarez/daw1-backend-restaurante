@@ -26,7 +26,10 @@ public class CategoriaServiceImpl implements CategoriaService {
     @Override
     public CategoriaDTOResponse guardarCategoria(CategoriaDTORequest categoriaRequest) {
         if (categoriaRepository.existsCategoriaByNombre(categoriaRequest.nombre())) {
-            throw new BusinessError("El nombre de la categoría ya existe. Debe ingresar uno nuevo.");
+            throw new BusinessError("El nombre "+categoriaRequest.nombre() + " de la categoría ya existe. Debe ingresar uno nuevo.");
+        }
+        if(categoriaRequest.precioMinimo()>=0){
+            throw new BusinessError("El precio minimo debe ser mayor que S/ 0");
         }
         Categoria categoria = categoriaMapper.RequestToEntity(categoriaRequest);
         categoria.setActivo(true);
@@ -36,7 +39,7 @@ public class CategoriaServiceImpl implements CategoriaService {
     @Override
     public CategoriaDTOResponse actualizarCategoria(Short id, CategoriaDTORequest categoriaRequest) {
         Categoria categoria = categoriaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Categoria no encontrada"));
+                .orElseThrow(() -> new BusinessError("Categoria no encontrada con id: " + id));
         categoria.setNombre(categoriaRequest.nombre());
         categoria.setDescripcion(categoriaRequest.descripcion());
         categoriaRepository.save(categoria);
@@ -45,12 +48,14 @@ public class CategoriaServiceImpl implements CategoriaService {
 
     @Override
     public CategoriaDTOResponse obtenerCategoriaPorId(Short id) {
-        return categoriaMapper.toDtoResponse(categoriaRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Categoria no encontrada con id: " + id))) ;
+        return categoriaMapper.toDtoResponse(categoriaRepository.findById(id)
+                .orElseThrow(() -> new BusinessError("Categoria no encontrada con id: " + id))) ;
     }
 
     @Override
     public void eliminarCategoria(Short idCategoria) {
-        Categoria categoria = categoriaRepository.findById(idCategoria).orElseThrow(() -> new EntityNotFoundException("Categoria no encontrada"));
+        Categoria categoria = categoriaRepository.findById(idCategoria)
+                .orElseThrow(() -> new BusinessError("Categoria no encontrada con id: " + idCategoria));
         categoria.eliminarItemMenuAsociado();
         categoriaRepository.save(categoria);
     }

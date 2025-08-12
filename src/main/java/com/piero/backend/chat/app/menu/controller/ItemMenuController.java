@@ -60,7 +60,7 @@ public class ItemMenuController {
 
     @PatchMapping("/cambiar-estado/{id}")
     public ResponseEntity<ItemMenuDTOResponse> cambiarEstadoItemMenu(@PathVariable Integer id,@RequestBody EstadoItemMenuDtoRequest estado){
-        ItemMenuDTOResponse itemMenuActualizado = itemMenuService.cambiarEstadoItemMenu(id,estado.estado());
+        ItemMenuDTOResponse itemMenuActualizado = itemMenuService.cambiarEstadoItemMenu(id,estado);
         messagingTemplate.convertAndSend("/topic/items-menu/cambio-estado", itemMenuActualizado);
         return ResponseEntity.ok(itemMenuActualizado);
     }
