@@ -14,4 +14,9 @@ public class GlobalHandlerException  {
         return ResponseEntity.badRequest().body(new ResponseError(ex.getMessage(), LocalDateTime.now()));
     }
 
+    @ExceptionHandler(SystemError.class)
+    public ResponseEntity<Object> handleSystemError(SystemError ex){
+        return ResponseEntity.badRequest().body(new ResponseError(ex.getMessage(), LocalDateTime.now()));
+    }
+
 }
