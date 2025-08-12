@@ -5,6 +5,7 @@ import com.piero.backend.chat.app.ordenes.model.DetalleOrden;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -37,7 +38,7 @@ public class ItemMenu {
 
     @OneToMany(mappedBy = "itemMenu")
     @ToString.Exclude
-    private List<DetalleOrden> detalles;
+    private List<DetalleOrden> detalles = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private EstadoItemMenu  estado = EstadoItemMenu.DISPONIBLE;
