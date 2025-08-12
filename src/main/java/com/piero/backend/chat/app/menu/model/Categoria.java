@@ -19,11 +19,15 @@ public class Categoria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Short id;
+
     @Column(unique = true)
     private String nombre;
+
     private String descripcion;
+
     @Column(name = "precio_minimo")
     private double precioMinimo;
+
     @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<ItemMenu> itemMenus = new ArrayList<>();
