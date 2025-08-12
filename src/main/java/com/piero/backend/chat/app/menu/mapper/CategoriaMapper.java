@@ -19,6 +19,7 @@ public class CategoriaMapper {
                 categoria.getPrecioMinimo()
         );
     }
+
     public Categoria RequestToEntity(CategoriaDTORequest categoriaDTORequest){
         Categoria categoria = new Categoria();
         categoria.setNombre(categoriaDTORequest.nombre());
@@ -26,6 +27,7 @@ public class CategoriaMapper {
         categoria.setPrecioMinimo(categoriaDTORequest.precioMinimo());
         return categoria;
     }
+
     public List<CategoriaDTOResponse> listToDto(List<Categoria> categorias) {
         return categorias.stream().map(this::toDtoResponse).toList();
     }
