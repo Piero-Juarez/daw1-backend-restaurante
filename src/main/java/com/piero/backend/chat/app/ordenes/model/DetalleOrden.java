@@ -34,8 +34,7 @@ public class DetalleOrden {
     @Column(name = "precio_unitario")
     private Double precioUnitario;
 
-    @Value("${appication.ordenes.detalle.igv}")
-    private Double igv;
+    private Double igv = 0.18;
 
     private Double subtotal; // cantidad * precioUnitario sin IGV ni descuentos.
     private Double total; // Monto total a pagar por este detalle (ya con IGV).
