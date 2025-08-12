@@ -27,6 +27,7 @@ public class MesaController {
     }
 
     // OBTENER MESAS DISPONIBLES (GET)
+    // TODO: VERIFICAR LÓGICA DEL ENDPOINT
     @GetMapping("/disponibles")
     public ResponseEntity<List<MesaDTOResponse>> obtenerMesasDisponibles() {
         List<MesaDTOResponse> mesasDtoResponse = mesaService.listarMesasDisponibles();
@@ -55,6 +56,8 @@ public class MesaController {
         messagingTemplate.convertAndSend("/topic/mesas", mesaDTOResponse);
         return ResponseEntity.ok(mesaDTOResponse);
     }
+
+    // TODO: CREAR UN ENDPOINT PARA ACTUALIZAR EL ESTADO DE UNA MESA
 
     // ELIMINAR UNA MESA (DELETE)
     @DeleteMapping("/{id}")
