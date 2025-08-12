@@ -12,7 +12,6 @@ import com.piero.backend.chat.app.menu.model.enums.EstadoItemMenu;
 import com.piero.backend.chat.app.menu.repository.CategoriaRepository;
 import com.piero.backend.chat.app.menu.repository.ItemMenuRepository;
 import com.piero.backend.chat.app.menu.service.ItemMenuService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
