@@ -3,6 +3,7 @@ package com.piero.backend.chat.app.ordenes.mapper.impl;
 import com.piero.backend.chat.app.config.AppUtils;
 import com.piero.backend.chat.app.menu.model.ItemMenu;
 import com.piero.backend.chat.app.menu.repository.ItemMenuRepository;
+import com.piero.backend.chat.app.ordenes.dto.detalleorden.DetalleOrdenRequestDTO;
 import com.piero.backend.chat.app.ordenes.dto.detalleorden.DetalleOrdenResponseDTO;
 import com.piero.backend.chat.app.ordenes.dto.orden.OrdenRequestDTO;
 import com.piero.backend.chat.app.ordenes.dto.orden.OrdenResponseDTO;
@@ -32,7 +33,6 @@ public class OrdenMapperImpl implements OrdenMapper {
 
     @Override
     public Orden toEntity(OrdenRequestDTO ordenRequestDTO, Mesa mesa) {
-
         Orden orden = new Orden();
         orden.setMesa(mesa);
         orden.setActivo(true);
@@ -40,32 +40,7 @@ public class OrdenMapperImpl implements OrdenMapper {
         orden.setFechaCreacion(LocalDate.now());
         orden.setHoraCreacion(LocalTime.now());
         orden.setCodigoOrden(generarCodigoOrden());
-
-        AtomicReference<Double> montoSubtotalOrden = new AtomicReference<>(0.0);
-        AtomicReference<Double> montoTotalOrden = new AtomicReference<>(0.0);
-
-        List<DetalleOrden> detalles = ordenRequestDTO.detalles().stream().map(detalleDto -> {
-            ItemMenu item = itemMenuRepository.findById(detalleDto.itemMenuId()).orElseThrow(() -> new EntityNotFoundException("ItemMenu no encontrado con ID: " + detalleDto.itemMenuId()));
-            DetalleOrden detalleOrden = new DetalleOrden();
-            detalleOrden.setOrden(orden);
-            detalleOrden.setItemMenu(item);
-            detalleOrden.setCantidad(detalleDto.cantidad());
-            detalleOrden.setPrecioUnitario(item.getPrecio());
-            detalleOrden.setActivo(true);
-
-            double subTotalDetalle = detalleOrden.getCantidad() * detalleOrden.getPrecioUnitario();
-            double totalDetalle = subTotalDetalle * (1 + detalleOrden.getIgv());
-            detalleOrden.setSubtotal(subTotalDetalle);
-            detalleOrden.setTotal(totalDetalle);
-
-            montoSubtotalOrden.updateAndGet(subtotal -> subtotal + subTotalDetalle);
-            montoTotalOrden.updateAndGet(total -> total + totalDetalle);
-            return detalleOrden;
-        }).toList();
-
-        orden.setDetalles(detalles);
-        orden.setMontoSubtotal(montoSubtotalOrden.get());
-        orden.setMontoTotal(montoTotalOrden.get());
+        actualizarDetalles(orden, ordenRequestDTO.detalles());
         return orden;
     }
 
@@ -84,6 +59,37 @@ public class OrdenMapperImpl implements OrdenMapper {
                 .montoTotal(orden.getMontoTotal())
                 .detalles(detallesDto)
                 .build();
+    }
+
+    @Override
+    public void actualizarDetalles(Orden orden, List<DetalleOrdenRequestDTO> detallesDto) {
+        AtomicReference<Double> montoSubtotalOrden = new AtomicReference<>(0.0);
+        AtomicReference<Double> montoTotalOrden = new AtomicReference<>(0.0);
+
+        List<DetalleOrden> detalles = detallesDto.stream().map(detalleDto -> {
+            ItemMenu item = itemMenuRepository.findById(detalleDto.itemMenuId()).orElseThrow(() -> new EntityNotFoundException("ItemMenu no encontrado con ID: " + detalleDto.itemMenuId()));
+            DetalleOrden detalleOrden = new DetalleOrden();
+            detalleOrden.setOrden(orden);
+            detalleOrden.setItemMenu(item);
+            detalleOrden.setCantidad(detalleDto.cantidad());
+            detalleOrden.setPrecioUnitario(item.getPrecio());
+            detalleOrden.setActivo(true);
+
+            double subTotalDetalle = detalleOrden.getCantidad() * detalleOrden.getPrecioUnitario();
+            double totalDetalle = subTotalDetalle + (detalleOrden.getIgv() * subTotalDetalle);
+            detalleOrden.setSubtotal(subTotalDetalle);
+            detalleOrden.setTotal(totalDetalle);
+
+            montoSubtotalOrden.updateAndGet(subtotal -> subtotal + subTotalDetalle);
+            montoTotalOrden.updateAndGet(total -> total + totalDetalle);
+            return detalleOrden;
+        }).toList();
+
+        orden.getDetalles().clear();
+        orden.getDetalles().addAll(detalles);
+
+        orden.setMontoSubtotal(montoSubtotalOrden.get());
+        orden.setMontoTotal(montoTotalOrden.get());
     }
 
     private String generarCodigoOrden() {

@@ -3,7 +3,6 @@ package com.piero.backend.chat.app.ordenes.model;
 import com.piero.backend.chat.app.menu.model.ItemMenu;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.beans.factory.annotation.Value;
 
 @Getter
 @Setter
@@ -34,8 +33,7 @@ public class DetalleOrden {
     @Column(name = "precio_unitario")
     private Double precioUnitario;
 
-    @Value("${appication.ordenes.detalle.igv}")
-    private Double igv;
+    private Double igv = 0.18;
 
     private Double subtotal; // cantidad * precioUnitario sin IGV ni descuentos.
     private Double total; // Monto total a pagar por este detalle (ya con IGV).
