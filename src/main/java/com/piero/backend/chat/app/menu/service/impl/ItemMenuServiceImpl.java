@@ -1,6 +1,7 @@
 package com.piero.backend.chat.app.menu.service.impl;
 
 import com.piero.backend.chat.app.exception.BusinessError;
+import com.piero.backend.chat.app.exception.SystemError;
 import com.piero.backend.chat.app.menu.dto.itemmenu.EstadoItemMenuDtoRequest;
 import com.piero.backend.chat.app.menu.dto.itemmenu.ItemMenuDTORequest;
 import com.piero.backend.chat.app.menu.dto.itemmenu.ItemMenuDTOResponse;
@@ -35,8 +36,7 @@ public class ItemMenuServiceImpl implements ItemMenuService {
     @Override
     @Transactional
     public ItemMenuDTOResponse guardarItemMenu(ItemMenuDTORequest itemMenuDTORequest) {
-        Categoria categoriaElegida = categoriaRepository.findById(itemMenuDTORequest.idCategoria())
-                .orElseThrow(()-> new BusinessError("Categoria no encontrada con id: " + itemMenuDTORequest.idCategoria()));
+        Categoria categoriaElegida = categoriaRepository.findById(itemMenuDTORequest.idCategoria()).orElseThrow(()-> new SystemError("Categoria no encontrada con id: " + itemMenuDTORequest.idCategoria()));
 
         controlErrores(itemMenuDTORequest, categoriaElegida);
 
@@ -57,10 +57,8 @@ public class ItemMenuServiceImpl implements ItemMenuService {
     @Override
     @Transactional
     public ItemMenuDTOResponse actualizarItemMenu(Integer idMenu, ItemMenuDTORequest itemMenuDTORequest) {
-        ItemMenu itemMenu = itemMenuRepository.findById(idMenu)
-                .orElseThrow(() -> new BusinessError("ItemMenu no encontrada con id: "+idMenu));
-        Categoria categoriaElegida = categoriaRepository.findById(itemMenuDTORequest.idCategoria())
-                .orElseThrow(()-> new BusinessError("Categoria no encontrada con id: " + itemMenuDTORequest.idCategoria()));
+        ItemMenu itemMenu = itemMenuRepository.findById(idMenu).orElseThrow(() -> new SystemError("ItemMenu no encontrada con id: "+idMenu));
+        Categoria categoriaElegida = categoriaRepository.findById(itemMenuDTORequest.idCategoria()).orElseThrow(()-> new SystemError("Categoria no encontrada con id: " + itemMenuDTORequest.idCategoria()));
 
         controlErrores(itemMenuDTORequest, categoriaElegida);
 
@@ -78,15 +76,13 @@ public class ItemMenuServiceImpl implements ItemMenuService {
     @Override
     @Transactional(readOnly = true)
     public ItemMenuDTOResponse buscarItemMenuPorId(Integer id) {
-        return itemMenuMapper.toDtoResponse(itemMenuRepository.findById(id)
-                .orElseThrow(() -> new BusinessError("ItemMenu no encontrada con id: "+id)));
+        return itemMenuMapper.toDtoResponse(itemMenuRepository.findById(id).orElseThrow(() -> new SystemError("ItemMenu no encontrada con id: "+id)));
     }
 
     @Override
     @Transactional
     public ItemMenuDTOResponse cambiarEstadoItemMenu(Integer id, EstadoItemMenuDtoRequest dto) {
-        ItemMenu itemMenuBuscado = itemMenuRepository.findById(id)
-                .orElseThrow(() -> new BusinessError("ItemMenu no encontrada con id: "+id));
+        ItemMenu itemMenuBuscado = itemMenuRepository.findById(id).orElseThrow(() -> new SystemError("ItemMenu no encontrada con id: "+id));
         itemMenuBuscado.setEstado(EstadoItemMenu.valueOf(dto.estado().toUpperCase()));
         itemMenuRepository.save(itemMenuBuscado);
         return itemMenuMapper.toDtoResponse(itemMenuBuscado);
@@ -95,7 +91,7 @@ public class ItemMenuServiceImpl implements ItemMenuService {
     @Override
     @Transactional
     public void eliminarItemMenu(Integer id) {
-        ItemMenu itemMenuEliminar = itemMenuRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("ItemMenu no encontrada con id: "+id));
+        ItemMenu itemMenuEliminar = itemMenuRepository.findById(id).orElseThrow(() -> new SystemError("ItemMenu no encontrada con id: "+id));
         itemMenuEliminar.setActivo(false);
         itemMenuRepository.save(itemMenuEliminar);
     }
