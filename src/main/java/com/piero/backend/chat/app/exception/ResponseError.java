@@ -3,6 +3,9 @@ package com.piero.backend.chat.app.exception;
 import java.time.LocalDateTime;
 
 public record ResponseError(
+        String error,
         String message,
-        LocalDateTime timestamp
+        int status,
+        LocalDateTime timestamp,
+        String path
 ) { }
