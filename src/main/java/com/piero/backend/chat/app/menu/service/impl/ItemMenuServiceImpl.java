@@ -1,7 +1,6 @@
 package com.piero.backend.chat.app.menu.service.impl;
 
-import com.piero.backend.chat.app.exception.BusinessError;
-import com.piero.backend.chat.app.exception.SystemError;
+import com.piero.backend.chat.app.exception.ErrorResponse;
 import com.piero.backend.chat.app.menu.dto.itemmenu.EstadoItemMenuDtoRequest;
 import com.piero.backend.chat.app.menu.dto.itemmenu.ItemMenuDTORequest;
 import com.piero.backend.chat.app.menu.dto.itemmenu.ItemMenuDTOResponse;
@@ -15,6 +14,7 @@ import com.piero.backend.chat.app.menu.service.ItemMenuService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,7 +35,7 @@ public class ItemMenuServiceImpl implements ItemMenuService {
     @Override
     @Transactional
     public ItemMenuDTOResponse guardarItemMenu(ItemMenuDTORequest itemMenuDTORequest) {
-        Categoria categoriaElegida = categoriaRepository.findById(itemMenuDTORequest.idCategoria()).orElseThrow(()-> new SystemError("Categoria no encontrada con id: " + itemMenuDTORequest.idCategoria()));
+        Categoria categoriaElegida = categoriaRepository.findById(itemMenuDTORequest.idCategoria()).orElseThrow(()-> new ErrorResponse("Categoria no encontrada con id: " + itemMenuDTORequest.idCategoria(), HttpStatus.NOT_FOUND));
 
         controlErrores(itemMenuDTORequest, categoriaElegida);
 
@@ -56,8 +56,8 @@ public class ItemMenuServiceImpl implements ItemMenuService {
     @Override
     @Transactional
     public ItemMenuDTOResponse actualizarItemMenu(Integer idMenu, ItemMenuDTORequest itemMenuDTORequest) {
-        ItemMenu itemMenu = itemMenuRepository.findById(idMenu).orElseThrow(() -> new SystemError("ItemMenu no encontrada con id: "+idMenu));
-        Categoria categoriaElegida = categoriaRepository.findById(itemMenuDTORequest.idCategoria()).orElseThrow(()-> new SystemError("Categoria no encontrada con id: " + itemMenuDTORequest.idCategoria()));
+        ItemMenu itemMenu = itemMenuRepository.findById(idMenu).orElseThrow(() -> new ErrorResponse("ItemMenu no encontrada con id: " + idMenu, HttpStatus.NOT_FOUND));
+        Categoria categoriaElegida = categoriaRepository.findById(itemMenuDTORequest.idCategoria()).orElseThrow(()-> new ErrorResponse("Categoria no encontrada con id: " + itemMenuDTORequest.idCategoria(), HttpStatus.NOT_FOUND));
 
         controlErrores(itemMenuDTORequest, categoriaElegida);
 
@@ -75,13 +75,13 @@ public class ItemMenuServiceImpl implements ItemMenuService {
     @Override
     @Transactional(readOnly = true)
     public ItemMenuDTOResponse buscarItemMenuPorId(Integer id) {
-        return itemMenuMapper.toDtoResponse(itemMenuRepository.findById(id).orElseThrow(() -> new SystemError("ItemMenu no encontrada con id: "+id)));
+        return itemMenuMapper.toDtoResponse(itemMenuRepository.findById(id).orElseThrow(() -> new ErrorResponse("ItemMenu no encontrada con id: " + id, HttpStatus.NOT_FOUND)));
     }
 
     @Override
     @Transactional
     public ItemMenuDTOResponse cambiarEstadoItemMenu(Integer id, EstadoItemMenuDtoRequest dto) {
-        ItemMenu itemMenuBuscado = itemMenuRepository.findById(id).orElseThrow(() -> new SystemError("ItemMenu no encontrada con id: "+id));
+        ItemMenu itemMenuBuscado = itemMenuRepository.findById(id).orElseThrow(() -> new ErrorResponse("ItemMenu no encontrada con id: " + id, HttpStatus.NOT_FOUND));
         itemMenuBuscado.setEstado(EstadoItemMenu.valueOf(dto.estado().toUpperCase()));
         itemMenuRepository.save(itemMenuBuscado);
         return itemMenuMapper.toDtoResponse(itemMenuBuscado);
@@ -90,20 +90,20 @@ public class ItemMenuServiceImpl implements ItemMenuService {
     @Override
     @Transactional
     public void eliminarItemMenu(Integer id) {
-        ItemMenu itemMenuEliminar = itemMenuRepository.findById(id).orElseThrow(() -> new SystemError("ItemMenu no encontrada con id: "+id));
+        ItemMenu itemMenuEliminar = itemMenuRepository.findById(id).orElseThrow(() -> new ErrorResponse("ItemMenu no encontrada con id: " + id, HttpStatus.NOT_FOUND));
         itemMenuEliminar.setActivo(false);
         itemMenuRepository.save(itemMenuEliminar);
     }
 
     public void controlErrores(ItemMenuDTORequest itemMenuDTORequest, Categoria categoriaElegida) {
         if(itemMenuDTORequest.precio()<=0){
-            throw new BusinessError("El precio debe ser mayor a S/ 0");
+            throw new ErrorResponse("El precio debe ser mayor a S/ 0", HttpStatus.BAD_REQUEST);
         }
         if (itemMenuDTORequest.precio()<categoriaElegida.getPrecioMinimo()){
-            throw new BusinessError("El precio debe ser mayor a S/ " +  categoriaElegida.getPrecioMinimo());
+            throw new ErrorResponse("El precio debe ser mayor a S/ " +  categoriaElegida.getPrecioMinimo(), HttpStatus.BAD_REQUEST);
         }
         if(itemMenuRepository.existsByNombre(itemMenuDTORequest.nombre())){
-            throw new BusinessError("EL nombre de :" + itemMenuDTORequest.nombre() + " ya existe");
+            throw new ErrorResponse("EL nombre de :" + itemMenuDTORequest.nombre() + " ya existe", HttpStatus.CONFLICT);
         }
     }
 }
