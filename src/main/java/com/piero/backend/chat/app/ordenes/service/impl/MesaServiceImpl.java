@@ -1,5 +1,6 @@
 package com.piero.backend.chat.app.ordenes.service.impl;
 
+import com.piero.backend.chat.app.exception.ErrorResponse;
 import com.piero.backend.chat.app.ordenes.dto.mesa.MesaDTORequest;
 import com.piero.backend.chat.app.ordenes.dto.mesa.MesaDTOResponse;
 import com.piero.backend.chat.app.ordenes.mapper.MesaMapper;
@@ -7,8 +8,8 @@ import com.piero.backend.chat.app.ordenes.model.Mesa;
 import com.piero.backend.chat.app.ordenes.model.enums.EstadoMesa;
 import com.piero.backend.chat.app.ordenes.repository.MesaRepository;
 import com.piero.backend.chat.app.ordenes.service.MesaService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,7 +41,7 @@ public class MesaServiceImpl implements MesaService {
     @Override
     public MesaDTOResponse actualizarMesa(Short id, MesaDTORequest mesaDTORequest) {
         if (id == null || mesaDTORequest == null) { return null; }
-        Mesa mesaEncontrada = mesaRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Mesa con ID: " + id + ", no encontrada"));
+        Mesa mesaEncontrada = mesaRepository.findById(id).orElseThrow(() -> new ErrorResponse("Mesa con ID: " + id + ", no encontrada", HttpStatus.NOT_FOUND));
         // mesaEncontrada.setNumero(mesaDTORequest.numero());
         mesaEncontrada.setCapacidad(mesaDTORequest.capacidad());
         if (mesaDTORequest.estado() != null && !mesaDTORequest.estado().isBlank()) {
@@ -52,7 +53,7 @@ public class MesaServiceImpl implements MesaService {
     @Override
     public MesaDTOResponse obtenerMesaPorId(Short id) {
         if (id == null) { return null; }
-        Mesa mesaEncontrada = mesaRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Mesa con ID: " + id + ", no encontrada"));
+        Mesa mesaEncontrada = mesaRepository.findById(id).orElseThrow(() -> new ErrorResponse("Mesa con ID: " + id + ", no encontrada", HttpStatus.NOT_FOUND));
         return mesaMapper.toDto(mesaEncontrada);
     }
 
