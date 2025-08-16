@@ -10,5 +10,6 @@ public record DetalleOrdenResponseDTO(
         Integer cantidad,
         @JsonProperty("precio_unitario") Double precioUnitario,
         Double subtotal,
+        Double igv,
         Double total
 ) { }
