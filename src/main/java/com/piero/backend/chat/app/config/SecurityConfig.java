@@ -41,6 +41,11 @@ public class SecurityConfig {
                         // Endpoints públicos
                         .requestMatchers("api/auth/**").permitAll()
                         .requestMatchers("/websocket/**").permitAll()
+                        .requestMatchers(
+                                "/swagger-ui.html",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**"
+                        ).permitAll()
 
                         // Lo demás requiere autenticación
                         .anyRequest().authenticated()
