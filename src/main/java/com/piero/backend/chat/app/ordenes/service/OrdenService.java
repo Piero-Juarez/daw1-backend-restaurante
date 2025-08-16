@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 public interface OrdenService {
 
     OrdenResponseDTO crearOrden(OrdenRequestDTO ordenRequestDTO);
+    OrdenResponseDTO obtenerOrdenPorId(Long id);
     Page<OrdenResponseDTO> obtenerOrdenesDelDia(Pageable pageable);
     OrdenResponseDTO actualizarOrden(Long ordenId, OrdenActualizarRequestDTO ordenActualizarRequestDTO);
     OrdenResponseDTO cambiarEstadoOrden(Long ordenId, OrdenCambiarEstadoRequestDTO ordenCambiarEstadoRequestDTO);
