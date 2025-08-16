@@ -24,23 +24,6 @@ public class AuthService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    /*
-    public TokenResponse register(UsuarioDTORequest request) {
-        Usuario usuario = Usuario.builder()
-                .nombre(request.nombre())
-                .apellido(request.apellido())
-                .correo(request.correo())
-                .clave(passwordEncoder.encode(request.clave()))
-                .rol(Rol.valueOf(request.rol()))
-                .build();
-        Usuario usuarioGuardado = usuarioRepository.save(usuario);
-        String jwtToken = jwtService.generateToken(usuarioGuardado);
-        String refreshToken = jwtService.generateRefreshToken(usuarioGuardado);
-        saveUserToken(usuarioGuardado, jwtToken);
-        return new TokenResponse(jwtToken, refreshToken);
-    }
-     */
-
     public TokenResponse login(LoginRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
