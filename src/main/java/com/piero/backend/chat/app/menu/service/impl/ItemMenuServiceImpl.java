@@ -35,9 +35,12 @@ public class ItemMenuServiceImpl implements ItemMenuService {
     @Override
     @Transactional
     public ItemMenuDTOResponse guardarItemMenu(ItemMenuDTORequest itemMenuDTORequest) {
+        if(itemMenuRepository.existsByNombre(itemMenuDTORequest.nombre())){
+            throw new ErrorResponse("EL nombre de :" + itemMenuDTORequest.nombre() + " ya existe", HttpStatus.CONFLICT);
+        }
         Categoria categoriaElegida = categoriaRepository.findById(itemMenuDTORequest.idCategoria()).orElseThrow(()-> new ErrorResponse("Categoria no encontrada con id: " + itemMenuDTORequest.idCategoria(), HttpStatus.NOT_FOUND));
 
-        controlErrores(itemMenuDTORequest, categoriaElegida);
+        controlErroresPrecio(itemMenuDTORequest, categoriaElegida);
 
         ItemMenu itemMenu = itemMenuMapper.RequestToEntity(itemMenuDTORequest);
         itemMenu.setCategoria(categoriaElegida);
@@ -59,7 +62,7 @@ public class ItemMenuServiceImpl implements ItemMenuService {
         ItemMenu itemMenu = itemMenuRepository.findById(idMenu).orElseThrow(() -> new ErrorResponse("ItemMenu no encontrada con id: " + idMenu, HttpStatus.NOT_FOUND));
         Categoria categoriaElegida = categoriaRepository.findById(itemMenuDTORequest.idCategoria()).orElseThrow(()-> new ErrorResponse("Categoria no encontrada con id: " + itemMenuDTORequest.idCategoria(), HttpStatus.NOT_FOUND));
 
-        controlErrores(itemMenuDTORequest, categoriaElegida);
+        controlErroresPrecio(itemMenuDTORequest, categoriaElegida);
 
         itemMenu.setNombre(itemMenuDTORequest.nombre());
         itemMenu.setDescripcion(itemMenuDTORequest.descripcion());
@@ -95,15 +98,12 @@ public class ItemMenuServiceImpl implements ItemMenuService {
         itemMenuRepository.save(itemMenuEliminar);
     }
 
-    public void controlErrores(ItemMenuDTORequest itemMenuDTORequest, Categoria categoriaElegida) {
+    public void controlErroresPrecio(ItemMenuDTORequest itemMenuDTORequest, Categoria categoriaElegida) {
         if(itemMenuDTORequest.precio()<=0){
             throw new ErrorResponse("El precio debe ser mayor a S/ 0", HttpStatus.BAD_REQUEST);
         }
         if (itemMenuDTORequest.precio()<categoriaElegida.getPrecioMinimo()){
             throw new ErrorResponse("El precio debe ser mayor a S/ " +  categoriaElegida.getPrecioMinimo(), HttpStatus.BAD_REQUEST);
-        }
-        if(itemMenuRepository.existsByNombre(itemMenuDTORequest.nombre())){
-            throw new ErrorResponse("EL nombre de :" + itemMenuDTORequest.nombre() + " ya existe", HttpStatus.CONFLICT);
         }
     }
 }
