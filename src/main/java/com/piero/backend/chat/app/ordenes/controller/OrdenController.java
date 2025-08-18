@@ -39,7 +39,6 @@ public class OrdenController {
 
     @PatchMapping("/cambiar-estado/{id}")
     public ResponseEntity<OrdenResponseDTO> cambiarEstadoOrden(@PathVariable Long id, @RequestBody OrdenCambiarEstadoRequestDTO ordenCambiarEstadoRequestDTO) {
-        System.out.println("NOMBRE DEL ESTADO ENVIADO DESDE EL CLIENTE" + ordenCambiarEstadoRequestDTO.estadoOrden());
         OrdenResponseDTO ordenEstadoActualizado = ordenService.cambiarEstadoOrden(id, ordenCambiarEstadoRequestDTO);
         return ResponseEntity.ok(ordenEstadoActualizado);
     }
