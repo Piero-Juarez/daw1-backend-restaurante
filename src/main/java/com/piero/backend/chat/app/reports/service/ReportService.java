@@ -1,9 +1,11 @@
-package com.piero.backend.chat.app.reports;
+package com.piero.backend.chat.app.reports.service;
 
 import com.piero.backend.chat.app.exception.ErrorResponse;
 import com.piero.backend.chat.app.ordenes.dto.detalleorden.DetalleOrdenResponseDTO;
 import com.piero.backend.chat.app.ordenes.dto.orden.OrdenResponseDTO;
 import com.piero.backend.chat.app.ordenes.service.OrdenService;
+import com.piero.backend.chat.app.reports.dto.InformacionAdicionalBoletaRequest;
+import com.piero.backend.chat.app.reports.data.DetalleInfo;
 import lombok.RequiredArgsConstructor;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;

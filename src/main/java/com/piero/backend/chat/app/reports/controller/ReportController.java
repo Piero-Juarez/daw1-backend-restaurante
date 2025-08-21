@@ -1,5 +1,7 @@
-package com.piero.backend.chat.app.reports;
+package com.piero.backend.chat.app.reports.controller;
 
+import com.piero.backend.chat.app.reports.dto.InformacionAdicionalBoletaRequest;
+import com.piero.backend.chat.app.reports.service.ReportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

@@ -1,4 +1,4 @@
-package com.piero.backend.chat.app.reports;
+package com.piero.backend.chat.app.reports.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
