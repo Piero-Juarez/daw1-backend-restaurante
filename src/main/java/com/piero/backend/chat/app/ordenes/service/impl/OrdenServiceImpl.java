@@ -34,7 +34,7 @@ public class OrdenServiceImpl implements OrdenService {
     @Override
     @Transactional
     public OrdenResponseDTO crearOrden(OrdenRequestDTO ordenRequestDTO) {
-        Mesa mesa = mesaRepository.findById(ordenRequestDTO.mesaId()).orElseThrow(() -> new IllegalArgumentException("Mesa con ID: " + ordenRequestDTO.mesaId() + ", no encontrada"));
+        Mesa mesa = mesaRepository.findById(ordenRequestDTO.mesaId()).orElseThrow(() -> new ErrorResponse("Mesa con ID: " + ordenRequestDTO.mesaId() + ", no encontrada", HttpStatus.NOT_FOUND));
         if (mesa.getEstado().equals(EstadoMesa.OCUPADA)) {
             throw new ErrorResponse("La mesa " + mesa.getNumero() + " ya se encuentra ocupada", HttpStatus.CONFLICT);
         }
@@ -52,15 +52,20 @@ public class OrdenServiceImpl implements OrdenService {
     }
 
     @Override
+    public Page<OrdenResponseDTO> obtenerOrdenes(Pageable pageable) {
+        return ordenRepository.findAll(pageable).map(ordenMapper::toResponseDto);
+    }
+
+    @Override
     @Transactional(readOnly = true)
-    public Page<OrdenResponseDTO> obtenerOrdenesDelDia(Pageable pageable) {
-        return ordenRepository.findByFechaCreacionAndActivo(LocalDate.now(), true, pageable).map(ordenMapper::toResponseDto);
+    public Page<OrdenResponseDTO> obtenerOrdenesDelDia(Pageable pageable, String estadoOrden) {
+        return ordenRepository.ordenesPorFechaActivoEstado(EstadoOrden.valueOf(estadoOrden.toUpperCase()), pageable).map(ordenMapper::toResponseDto);
     }
 
     @Override
     @Transactional
     public OrdenResponseDTO actualizarOrden(Long ordenId, OrdenActualizarRequestDTO ordenActualizarRequestDTO) {
-        Orden orden = ordenRepository.findById(ordenId).orElseThrow(() -> new EntityNotFoundException("Orden no encontrada con ID: " + ordenId));
+        Orden orden = ordenRepository.findById(ordenId).orElseThrow(() -> new ErrorResponse("Orden no encontrada con ID: " + ordenId, HttpStatus.NOT_FOUND));
         if (orden.getEstado().equals(EstadoOrden.PREPARANDO) || orden.getEstado().equals(EstadoOrden.COMPLETADA) || orden.getEstado().equals(EstadoOrden.CANCELADA)) {
             throw new ErrorResponse("No se puede modificar una orden que ya está en preparación, ha sido completada o cancelada", HttpStatus.CONFLICT);
         }
@@ -72,13 +77,13 @@ public class OrdenServiceImpl implements OrdenService {
     @Override
     @Transactional
     public OrdenResponseDTO cambiarEstadoOrden(Long ordenId, OrdenCambiarEstadoRequestDTO ordenCambiarEstadoRequestDTO) {
-        Orden orden = ordenRepository.findById(ordenId).orElseThrow(() -> new EntityNotFoundException("Orden no encontrada con ID: " + ordenId));
-        Mesa mesa = mesaRepository.findById(orden.getMesa().getId()).orElseThrow(() -> new IllegalArgumentException("Mesa con ID: " + orden.getMesa().getId() + ", no encontrada"));
+        Orden orden = ordenRepository.findById(ordenId).orElseThrow(() -> new ErrorResponse("Orden no encontrada con ID: " + ordenId, HttpStatus.NOT_FOUND));
+        Mesa mesa = mesaRepository.findById(orden.getMesa().getId()).orElseThrow(() -> new ErrorResponse("Mesa con ID: " + orden.getMesa().getId() + ", no encontrada", HttpStatus.NOT_FOUND));
         if (orden.getEstado().equals(EstadoOrden.COMPLETADA) || orden.getEstado().equals(EstadoOrden.CANCELADA)) {
             throw new ErrorResponse("No se puede cambiar el estado de la orden una vez completada o cancelada", HttpStatus.CONFLICT);
         }
         orden.setEstado(EstadoOrden.valueOf(ordenCambiarEstadoRequestDTO.estadoOrden().toUpperCase()));
-        if (orden.getEstado().equals(EstadoOrden.COMPLETADA)) {
+        if (orden.getEstado().equals(EstadoOrden.COMPLETADA) || orden.getEstado().equals(EstadoOrden.CANCELADA)) {
             mesa.setEstado(EstadoMesa.LIBRE);
             mesaRepository.save(mesa);
         }
