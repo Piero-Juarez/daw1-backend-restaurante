@@ -1,6 +1,7 @@
 package com.piero.backend.chat.app.ordenes.mapper.impl;
 
 import com.piero.backend.chat.app.config.AppUtils;
+import com.piero.backend.chat.app.exception.ErrorResponse;
 import com.piero.backend.chat.app.menu.model.ItemMenu;
 import com.piero.backend.chat.app.menu.repository.ItemMenuRepository;
 import com.piero.backend.chat.app.ordenes.dto.detalleorden.DetalleOrdenRequestDTO;
@@ -14,8 +15,9 @@ import com.piero.backend.chat.app.ordenes.model.Mesa;
 import com.piero.backend.chat.app.ordenes.model.Orden;
 import com.piero.backend.chat.app.ordenes.model.enums.EstadoOrden;
 import com.piero.backend.chat.app.ordenes.repository.OrdenRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -26,6 +28,9 @@ import java.util.concurrent.atomic.AtomicReference;
 @Component
 @RequiredArgsConstructor
 public class OrdenMapperImpl implements OrdenMapper {
+
+    @Value("${appication.ordenes.detalle.igv}")
+    private Double tasaIgv;
 
     private final OrdenRepository ordenRepository;
     private final ItemMenuRepository itemMenuRepository;
@@ -67,16 +72,21 @@ public class OrdenMapperImpl implements OrdenMapper {
         AtomicReference<Double> montoTotalOrden = new AtomicReference<>(0.0);
 
         List<DetalleOrden> detalles = detallesDto.stream().map(detalleDto -> {
-            ItemMenu item = itemMenuRepository.findById(detalleDto.itemMenuId()).orElseThrow(() -> new EntityNotFoundException("ItemMenu no encontrado con ID: " + detalleDto.itemMenuId()));
+            ItemMenu item = itemMenuRepository.findById(detalleDto.itemMenuId()).orElseThrow(() -> new ErrorResponse("ItemMenu no encontrado con ID: " + detalleDto.itemMenuId(), HttpStatus.NOT_FOUND));
+            double precioVenta = item.getPrecio();
+            double valorBase = item.getPrecio() / (1 + tasaIgv);
+            double montoIgv = valorBase * tasaIgv;
+
             DetalleOrden detalleOrden = new DetalleOrden();
             detalleOrden.setOrden(orden);
             detalleOrden.setItemMenu(item);
             detalleOrden.setCantidad(detalleDto.cantidad());
-            detalleOrden.setPrecioUnitario(item.getPrecio());
+            detalleOrden.setPrecioUnitario(valorBase);
             detalleOrden.setActivo(true);
 
-            double subTotalDetalle = detalleOrden.getCantidad() * detalleOrden.getPrecioUnitario();
-            double totalDetalle = subTotalDetalle + (detalleOrden.getIgv() * subTotalDetalle);
+            double subTotalDetalle = detalleOrden.getCantidad() * valorBase;
+            double totalDetalle = precioVenta * detalleOrden.getCantidad();
+            detalleOrden.setMontoIgv(montoIgv);
             detalleOrden.setSubtotal(subTotalDetalle);
             detalleOrden.setTotal(totalDetalle);
 
