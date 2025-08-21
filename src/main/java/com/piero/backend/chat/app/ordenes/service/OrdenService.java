@@ -11,7 +11,8 @@ public interface OrdenService {
 
     OrdenResponseDTO crearOrden(OrdenRequestDTO ordenRequestDTO);
     OrdenResponseDTO obtenerOrdenPorId(Long id);
-    Page<OrdenResponseDTO> obtenerOrdenesDelDia(Pageable pageable);
+    Page<OrdenResponseDTO> obtenerOrdenes(Pageable pageable);
+    Page<OrdenResponseDTO> obtenerOrdenesDelDia(Pageable pageable, String estadoOrden);
     OrdenResponseDTO actualizarOrden(Long ordenId, OrdenActualizarRequestDTO ordenActualizarRequestDTO);
     OrdenResponseDTO cambiarEstadoOrden(Long ordenId, OrdenCambiarEstadoRequestDTO ordenCambiarEstadoRequestDTO);
     void desactivarOrdenes();
