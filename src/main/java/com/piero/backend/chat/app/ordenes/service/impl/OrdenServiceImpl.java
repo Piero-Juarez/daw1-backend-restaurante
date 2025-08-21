@@ -13,15 +13,12 @@ import com.piero.backend.chat.app.ordenes.model.enums.EstadoOrden;
 import com.piero.backend.chat.app.ordenes.repository.MesaRepository;
 import com.piero.backend.chat.app.ordenes.repository.OrdenRepository;
 import com.piero.backend.chat.app.ordenes.service.OrdenService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDate;
 
 @Service
 @RequiredArgsConstructor
