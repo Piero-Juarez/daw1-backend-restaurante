@@ -33,7 +33,8 @@ public class DetalleOrden {
     @Column(name = "precio_unitario")
     private Double precioUnitario;
 
-    private Double igv = 0.18;
+    @Column(name = "monto_igv")
+    private Double montoIgv;
 
     private Double subtotal; // cantidad * precioUnitario sin IGV ni descuentos.
     private Double total; // Monto total a pagar por este detalle (ya con IGV).
