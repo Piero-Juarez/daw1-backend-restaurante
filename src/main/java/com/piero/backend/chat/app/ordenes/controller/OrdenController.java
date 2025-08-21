@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,28 +19,47 @@ import org.springframework.web.bind.annotation.*;
 public class OrdenController {
 
     private final OrdenService ordenService;
+    private final SimpMessagingTemplate simpMessagingTemplate;
 
     @GetMapping
-    public ResponseEntity<Page<OrdenResponseDTO>> obtenerOrdenesDelDia(Pageable pageable) {
-        Page<OrdenResponseDTO> ordenes = ordenService.obtenerOrdenesDelDia(pageable);
+    public ResponseEntity<Page<OrdenResponseDTO>> obtenerOrdenes(Pageable pageable) {
+        Page<OrdenResponseDTO> ordenes = ordenService.obtenerOrdenes(pageable);
         return ResponseEntity.ok(ordenes);
+    }
+
+    @GetMapping("/hoy")
+    public ResponseEntity<Page<OrdenResponseDTO>> obtenerOrdenesDelDia(
+            Pageable pageable,
+            @RequestParam(required = false, name = "estado") String estadoOrden
+    ) {
+        Page<OrdenResponseDTO> ordenes = ordenService.obtenerOrdenesDelDia(pageable, estadoOrden);
+        return ResponseEntity.ok(ordenes);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<OrdenResponseDTO> obtenerOrdenPorId(@PathVariable Long id) {
+        OrdenResponseDTO orden = ordenService.obtenerOrdenPorId(id);
+        return ResponseEntity.ok(orden);
     }
 
     @PostMapping
     public ResponseEntity<OrdenResponseDTO> crearOrden(@RequestBody OrdenRequestDTO ordenRequestDTO) {
         OrdenResponseDTO ordenResponseDTO = ordenService.crearOrden(ordenRequestDTO);
+        simpMessagingTemplate.convertAndSend("/topic/ordenes", ordenResponseDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(ordenResponseDTO);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<OrdenResponseDTO> actualizarOrden(@PathVariable Long id, @RequestBody OrdenActualizarRequestDTO ordenActualizarRequestDTO) {
         OrdenResponseDTO ordenActualizada = ordenService.actualizarOrden(id, ordenActualizarRequestDTO);
+        simpMessagingTemplate.convertAndSend("/topic/ordenes", ordenActualizada);
         return ResponseEntity.ok(ordenActualizada);
     }
 
     @PatchMapping("/cambiar-estado/{id}")
     public ResponseEntity<OrdenResponseDTO> cambiarEstadoOrden(@PathVariable Long id, @RequestBody OrdenCambiarEstadoRequestDTO ordenCambiarEstadoRequestDTO) {
         OrdenResponseDTO ordenEstadoActualizado = ordenService.cambiarEstadoOrden(id, ordenCambiarEstadoRequestDTO);
+        simpMessagingTemplate.convertAndSend("/topic/ordenes/cambio-estado", ordenEstadoActualizado);
         return ResponseEntity.ok(ordenEstadoActualizado);
     }
 
