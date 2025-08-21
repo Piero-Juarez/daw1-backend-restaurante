@@ -1,5 +1,6 @@
 package com.piero.backend.chat.app.ordenes.service;
 
+import com.piero.backend.chat.app.ordenes.dto.mesa.MesaCambiarEstadoRequestDTO;
 import com.piero.backend.chat.app.ordenes.dto.mesa.MesaDTORequest;
 import com.piero.backend.chat.app.ordenes.dto.mesa.MesaDTOResponse;
 
@@ -10,6 +11,7 @@ public interface MesaService {
     List<MesaDTOResponse> listarMesasDisponibles();
     MesaDTOResponse guardarMesa(MesaDTORequest mesaDTOResponse);
     MesaDTOResponse actualizarMesa(Short id, MesaDTORequest mesaDTOResponse);
+    MesaDTOResponse actualizarEstadoMesa(Short id, MesaCambiarEstadoRequestDTO mesaCambiarEstadoRequestDTO);
     MesaDTOResponse obtenerMesaPorId(Short id);
     void eliminarMesa(Short idMesa);
 }
