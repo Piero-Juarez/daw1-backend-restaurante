@@ -1,6 +1,7 @@
 package com.piero.backend.chat.app.ordenes.service.impl;
 
 import com.piero.backend.chat.app.exception.ErrorResponse;
+import com.piero.backend.chat.app.ordenes.dto.mesa.MesaCambiarEstadoRequestDTO;
 import com.piero.backend.chat.app.ordenes.dto.mesa.MesaDTORequest;
 import com.piero.backend.chat.app.ordenes.dto.mesa.MesaDTOResponse;
 import com.piero.backend.chat.app.ordenes.mapper.MesaMapper;
@@ -51,6 +52,17 @@ public class MesaServiceImpl implements MesaService {
     }
 
     @Override
+    public MesaDTOResponse actualizarEstadoMesa(Short id, MesaCambiarEstadoRequestDTO mesaCambiarEstadoRequestDTO) {
+        if (id == null || mesaCambiarEstadoRequestDTO == null) {
+            throw new ErrorResponse("ID de la mesa o estado no puede ser nulo", HttpStatus.BAD_REQUEST);
+        }
+        Mesa mesaEncontrada = mesaRepository.findById(id).orElseThrow(() -> new ErrorResponse("Mesa con ID: " + id + ", no encontrada", HttpStatus.NOT_FOUND));
+        mesaEncontrada.setEstado(EstadoMesa.valueOf(mesaCambiarEstadoRequestDTO.estadoMesa().toUpperCase()));
+        mesaRepository.save(mesaEncontrada);
+        return mesaMapper.toDto(mesaEncontrada);
+    }
+
+    @Override
     public MesaDTOResponse obtenerMesaPorId(Short id) {
         if (id == null) { return null; }
         Mesa mesaEncontrada = mesaRepository.findById(id).orElseThrow(() -> new ErrorResponse("Mesa con ID: " + id + ", no encontrada", HttpStatus.NOT_FOUND));
@@ -62,4 +74,5 @@ public class MesaServiceImpl implements MesaService {
         if (id == null) { return; }
         mesaRepository.deleteById(id);
     }
+
 }
