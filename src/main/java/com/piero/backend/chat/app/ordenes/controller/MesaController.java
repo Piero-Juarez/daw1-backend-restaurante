@@ -1,5 +1,6 @@
 package com.piero.backend.chat.app.ordenes.controller;
 
+import com.piero.backend.chat.app.ordenes.dto.mesa.MesaCambiarEstadoRequestDTO;
 import com.piero.backend.chat.app.ordenes.dto.mesa.MesaDTORequest;
 import com.piero.backend.chat.app.ordenes.dto.mesa.MesaDTOResponse;
 import com.piero.backend.chat.app.ordenes.service.MesaService;
@@ -27,7 +28,6 @@ public class MesaController {
     }
 
     // OBTENER MESAS DISPONIBLES (GET)
-    // TODO: VERIFICAR LÓGICA DEL ENDPOINT
     @GetMapping("/disponibles")
     public ResponseEntity<List<MesaDTOResponse>> obtenerMesasDisponibles() {
         List<MesaDTOResponse> mesasDtoResponse = mesaService.listarMesasDisponibles();
@@ -57,7 +57,13 @@ public class MesaController {
         return ResponseEntity.ok(mesaDTOResponse);
     }
 
-    // TODO: CREAR UN ENDPOINT PARA ACTUALIZAR EL ESTADO DE UNA MESA
+    // ACTUALIZAR ESTADO DE UNA MESA (PATCH)
+    @PatchMapping("/cambiar-estado/{id}")
+    public ResponseEntity<MesaDTOResponse> cambiarEstadoMesa(@PathVariable Short id, @RequestBody MesaCambiarEstadoRequestDTO mesaCambiarEstadoRequestDTO) {
+        MesaDTOResponse mesaDTOResponse = mesaService.actualizarEstadoMesa(id, mesaCambiarEstadoRequestDTO);
+        messagingTemplate.convertAndSend("/topic/mesas/estado", mesaDTOResponse);
+        return ResponseEntity.ok(mesaDTOResponse);
+    }
 
     // ELIMINAR UNA MESA (DELETE)
     @DeleteMapping("/{id}")
