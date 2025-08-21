@@ -16,7 +16,7 @@ public class DetalleOrdenMapperImpl implements DetalleOrdenMapper {
                 .cantidad(detalleOrden.getCantidad())
                 .precioUnitario(detalleOrden.getPrecioUnitario())
                 .subtotal(detalleOrden.getSubtotal())
-                .igv(detalleOrden.getIgv() * detalleOrden.getSubtotal())
+                .igv(detalleOrden.getMontoIgv())
                 .total(detalleOrden.getTotal())
                 .build();
     }
