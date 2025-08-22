@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -18,10 +19,10 @@ public interface OrdenRepository extends JpaRepository<Orden, Long> {
     @Query("SELECT MAX(o.id) FROM Orden o")
     Optional<Long> findMaxId();
 
-    // Page<Orden> findByFechaCreacionAndActivo(LocalDate fechaCreacion, Boolean activo, Pageable pageable);
+    @Query("SELECT o from Orden o WHERE o.fechaCreacion = CURRENT_DATE AND o.activo = TRUE AND (COALESCE(:estados, NULL) IS NULL OR o.estado IN :estados)")
+    Page<Orden> ordenesPorFechaActivoEstado(@Param("estados") List<EstadoOrden> estados, Pageable pageable);
 
-    @Query("SELECT o from Orden o WHERE o.fechaCreacion = CURRENT_DATE AND o.activo = TRUE AND (o.estado IS NULL OR o.estado = :estado)")
-    Page<Orden> ordenesPorFechaActivoEstado(@Param("estado") EstadoOrden estado, Pageable pageable);
+    Optional<Orden> findByMesa_IdAndEstadoAndActivoTrue(Short mesaId, EstadoOrden estado);
 
     @Modifying
     @Query("UPDATE Orden o SET o.activo = false WHERE (o.estado = 'CANCELADA' OR o.estado = 'COMPLETADA') AND o.activo = true")
