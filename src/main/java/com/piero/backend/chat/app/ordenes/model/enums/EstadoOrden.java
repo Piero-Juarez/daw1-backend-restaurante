@@ -4,5 +4,8 @@ public enum EstadoOrden {
     PENDIENTE,
     PREPARANDO,
     COMPLETADA,
+    EN_REPARTO,
+    ENTREGADA,
+    PAGADA,
     CANCELADA
 }
