@@ -34,6 +34,12 @@ public class MesaController {
         return ResponseEntity.ok(mesasDtoResponse);
     }
 
+    @GetMapping("/con-orden-pendiente")
+    public ResponseEntity<List<MesaDTOResponse>> obtenerMesasConOrdenPendiente() {
+        List<MesaDTOResponse> mesas = mesaService.listarMesasConOrdenesPendientes();
+        return ResponseEntity.ok(mesas);
+    }
+
     // OBTENER UNA MESA (GET)
     @GetMapping("/{id}")
     public ResponseEntity<MesaDTOResponse> obtenerMesaPorId(@PathVariable Short id) {
