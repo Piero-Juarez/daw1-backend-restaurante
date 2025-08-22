@@ -1,15 +1,9 @@
 package com.piero.backend.chat.app.usuarios.controller;
 
-import com.piero.backend.chat.app.config.JwtAuthenticationEntryPoint;
 import com.piero.backend.chat.app.usuarios.dto.UsuarioDTORequest;
 import com.piero.backend.chat.app.usuarios.dto.UsuarioDTOResponse;
 import com.piero.backend.chat.app.usuarios.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -31,7 +25,10 @@ public class UsuarioController {
 
     // LISTADO (GET)
     @GetMapping
-    @Operation(summary = "Obtener todos los usuarios", description = "Devuelve los usuarios activos en el sistema.")
+    @Operation(
+            summary = "Obtener todos los usuarios",
+            description = "Devuelve los usuarios activos en el sistema."
+    )
     public ResponseEntity<List<UsuarioDTOResponse>> obtenerUsuarios() {
         List<UsuarioDTOResponse> usuariosDtoResponse = usuarioService.obtenerUsuariosDto();
         return ResponseEntity.ok(usuariosDtoResponse);
@@ -41,38 +38,7 @@ public class UsuarioController {
     @GetMapping("/{id}")
     @Operation(
             summary = "Obtener un usuario por su id",
-            description = "Devuelve un usuario con sus datos completos.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Usuario encontrado exitosamente.",
-                            content = @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(
-                                            implementation = UsuarioDTOResponse.class
-                                    )
-                            )
-                    ),
-                    @ApiResponse(
-                            responseCode = "401",
-                            description = "No autorizado. Token JWT ausente o inválido.",
-                            content = @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(
-                                            implementation = JwtAuthenticationEntryPoint.class
-                                    )
-                            )
-                    )
-            },
-            parameters = {
-                    @Parameter(
-                            name = "id",
-                            description = "id numérico del usuario a consultar",
-                            required = true,
-                            example = "1",
-                            in = ParameterIn.PATH
-                    )
-            }
+            description = "Devuelve un usuario con sus datos completos."
     )
     public ResponseEntity<UsuarioDTOResponse> obtenerUsuarioPorId(@PathVariable Integer id) {
         UsuarioDTOResponse usuarioDtoResponse = usuarioService.obtenerUsuarioDtoPorId(id);
