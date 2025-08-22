@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/ordenes")
 @RequiredArgsConstructor
@@ -30,9 +32,9 @@ public class OrdenController {
     @GetMapping("/hoy")
     public ResponseEntity<Page<OrdenResponseDTO>> obtenerOrdenesDelDia(
             Pageable pageable,
-            @RequestParam(required = false, name = "estado") String estadoOrden
+            @RequestParam(required = false, name = "estado") List<String> estadosOrden
     ) {
-        Page<OrdenResponseDTO> ordenes = ordenService.obtenerOrdenesDelDia(pageable, estadoOrden);
+        Page<OrdenResponseDTO> ordenes = ordenService.obtenerOrdenesDelDia(pageable, estadosOrden);
         return ResponseEntity.ok(ordenes);
     }
 
@@ -42,11 +44,23 @@ public class OrdenController {
         return ResponseEntity.ok(orden);
     }
 
+    @GetMapping("/por-mesa-pendiente/{mesaId}")
+    public ResponseEntity<OrdenResponseDTO> obtenerOrdenPendientePorMesa(@PathVariable Short mesaId) {
+        OrdenResponseDTO orden = ordenService.obtenerOrdenPendientePorMesa(mesaId);
+        return ResponseEntity.ok(orden);
+    }
+
     @PostMapping
     public ResponseEntity<OrdenResponseDTO> crearOrden(@RequestBody OrdenRequestDTO ordenRequestDTO) {
         OrdenResponseDTO ordenResponseDTO = ordenService.crearOrden(ordenRequestDTO);
         simpMessagingTemplate.convertAndSend("/topic/ordenes", ordenResponseDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(ordenResponseDTO);
+    }
+
+    @PostMapping("/pagar/{id}")
+    public ResponseEntity<OrdenResponseDTO> marcarOrdenComoPagada(@PathVariable Long id) {
+        OrdenResponseDTO ordenPagada = ordenService.marcarComoPagada(id);
+        return ResponseEntity.ok(ordenPagada);
     }
 
     @PutMapping("/{id}")
