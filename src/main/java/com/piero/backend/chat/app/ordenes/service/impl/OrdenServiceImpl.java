@@ -90,6 +90,7 @@ public class OrdenServiceImpl implements OrdenService {
     }
 
     @Override
+    @Transactional
     public OrdenResponseDTO marcarComoPagada(Long ordenId) {
         Orden orden = ordenRepository.findById(ordenId).orElseThrow(() -> new ErrorResponse("Orden no encontrada con ID: " + ordenId, HttpStatus.NOT_FOUND));
         if (!orden.getEstado().equals(EstadoOrden.ENTREGADA)) {
