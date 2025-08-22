@@ -9,6 +9,7 @@ import java.util.List;
 public interface MesaService {
     List<MesaDTOResponse> listarMesas();
     List<MesaDTOResponse> listarMesasDisponibles();
+    List<MesaDTOResponse> listarMesasConOrdenesPendientes();
     MesaDTOResponse guardarMesa(MesaDTORequest mesaDTOResponse);
     MesaDTOResponse actualizarMesa(Short id, MesaDTORequest mesaDTOResponse);
     MesaDTOResponse actualizarEstadoMesa(Short id, MesaCambiarEstadoRequestDTO mesaCambiarEstadoRequestDTO);
