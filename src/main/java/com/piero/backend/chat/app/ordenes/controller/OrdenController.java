@@ -57,17 +57,17 @@ public class OrdenController {
         return ResponseEntity.status(HttpStatus.CREATED).body(ordenResponseDTO);
     }
 
-    @PostMapping("/pagar/{id}")
-    public ResponseEntity<OrdenResponseDTO> marcarOrdenComoPagada(@PathVariable Long id) {
-        OrdenResponseDTO ordenPagada = ordenService.marcarComoPagada(id);
-        return ResponseEntity.ok(ordenPagada);
-    }
-
     @PutMapping("/{id}")
     public ResponseEntity<OrdenResponseDTO> actualizarOrden(@PathVariable Long id, @RequestBody OrdenActualizarRequestDTO ordenActualizarRequestDTO) {
         OrdenResponseDTO ordenActualizada = ordenService.actualizarOrden(id, ordenActualizarRequestDTO);
         simpMessagingTemplate.convertAndSend("/topic/ordenes", ordenActualizada);
         return ResponseEntity.ok(ordenActualizada);
+    }
+
+    @PatchMapping("/pagar/{id}")
+    public ResponseEntity<OrdenResponseDTO> marcarOrdenComoPagada(@PathVariable Long id) {
+        OrdenResponseDTO ordenPagada = ordenService.marcarComoPagada(id);
+        return ResponseEntity.ok(ordenPagada);
     }
 
     @PatchMapping("/cambiar-estado/{id}")
