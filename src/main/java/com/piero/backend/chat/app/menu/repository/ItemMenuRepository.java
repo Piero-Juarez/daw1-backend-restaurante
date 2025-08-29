@@ -26,4 +26,7 @@ public interface ItemMenuRepository extends JpaRepository<ItemMenu, Integer> {
     //List<ItemMenu> findByCategoria_Id(Short categoriaId);
 
     boolean existsByNombreAndActivoTrue(String nombre);
+
+    @Query("SELECT COUNT(d) > 0 FROM DetalleOrden d JOIN d.orden o WHERE d.itemMenu.id = :itemId AND o.activo = true AND (o.estado = 'PENDIENTE' OR o.estado = 'PREPARANDO')")
+    boolean existsInActiveOrder(@Param("itemId") Integer itemId);
 }

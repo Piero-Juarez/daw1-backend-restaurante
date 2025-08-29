@@ -63,6 +63,10 @@ public class ItemMenuServiceImpl implements ItemMenuService {
         ItemMenu itemMenu = itemMenuRepository.findById(idMenu).orElseThrow(() -> new ErrorResponse("ItemMenu no encontrada con id: " + idMenu, HttpStatus.NOT_FOUND));
         Categoria categoriaElegida = categoriaRepository.findById(itemMenuDTORequest.idCategoria()).orElseThrow(()-> new ErrorResponse("Categoria no encontrada con id: " + itemMenuDTORequest.idCategoria(), HttpStatus.NOT_FOUND));
 
+        Boolean isExistNombre =itemMenuRepository.existsByNombreAndActivoTrue(itemMenuDTORequest.nombre());
+        if(isExistNombre){
+            throw new ErrorResponse("EL nombre de :" + itemMenuDTORequest.nombre() + " ya existe", HttpStatus.CONFLICT); //ToDo: Arreglar esta exception que no mande un JWT
+        }
         controlErroresPrecio(itemMenuDTORequest, categoriaElegida);
 
         itemMenu.setNombre(itemMenuDTORequest.nombre());
@@ -95,7 +99,9 @@ public class ItemMenuServiceImpl implements ItemMenuService {
     @Transactional
     public void eliminarItemMenu(Integer id) {
         ItemMenu itemMenuEliminar = itemMenuRepository.findById(id).orElseThrow(() -> new ErrorResponse("ItemMenu no encontrada con id: " + id, HttpStatus.NOT_FOUND));
-        
+        if (itemMenuRepository.existsInActiveOrder(id)) {
+            throw new ErrorResponse("No se puede eliminar este ítem del menú porque está en una orden activa o en proceso de preparación.", HttpStatus.BAD_REQUEST);
+        }
         itemMenuEliminar.setActivo(false);
         itemMenuRepository.save(itemMenuEliminar);
     }

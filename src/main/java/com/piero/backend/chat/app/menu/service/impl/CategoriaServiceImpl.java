@@ -41,6 +41,9 @@ public class CategoriaServiceImpl implements CategoriaService {
     @Override
     public CategoriaDTOResponse actualizarCategoria(Short id, CategoriaDTORequest categoriaRequest) {
         Categoria categoria = categoriaRepository.findById(id).orElseThrow(() -> new ErrorResponse("Categoria no encontrada con id: " + id, HttpStatus.NOT_FOUND));
+        if (categoriaRepository.existsCategoriaByNombre(categoriaRequest.nombre())) {
+            throw new ErrorResponse("La categoría "+categoriaRequest.nombre() + " ya existe. Debe ingresar uno nuevo.", HttpStatus.CONFLICT);
+        }
         categoria.setNombre(categoriaRequest.nombre());
         categoria.setDescripcion(categoriaRequest.descripcion());
         categoria.setPrecioMinimo(categoriaRequest.precioMinimo());
