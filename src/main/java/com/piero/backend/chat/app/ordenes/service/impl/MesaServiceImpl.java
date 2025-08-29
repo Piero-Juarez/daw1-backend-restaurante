@@ -9,6 +9,7 @@ import com.piero.backend.chat.app.ordenes.model.Mesa;
 import com.piero.backend.chat.app.ordenes.model.enums.EstadoMesa;
 import com.piero.backend.chat.app.ordenes.model.enums.EstadoOrden;
 import com.piero.backend.chat.app.ordenes.repository.MesaRepository;
+import com.piero.backend.chat.app.ordenes.repository.OrdenRepository;
 import com.piero.backend.chat.app.ordenes.service.MesaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -47,6 +48,8 @@ public class MesaServiceImpl implements MesaService {
     @Transactional
     public MesaDTOResponse guardarMesa(MesaDTORequest mesaDTORequest) {
         if (mesaDTORequest == null) { return null; }
+        if(mesaDTORequest.capacidad() == 0) {throw new ErrorResponse("No se puede agregar una mesa con capacidad 0", HttpStatus.BAD_REQUEST);}
+        if(mesaRepository.existsByNumero(mesaDTORequest.numero())){throw new ErrorResponse("Ya existe una mesa con ese numero, introduzca otro numero", HttpStatus.BAD_REQUEST);} //ToDo: Arreglar esta validacion, no sirve
         Mesa mesaCreada = mesaRepository.save(mesaMapper.toEntity(mesaDTORequest));
         return mesaMapper.toDto(mesaCreada);
     }
@@ -55,6 +58,7 @@ public class MesaServiceImpl implements MesaService {
     @Transactional
     public MesaDTOResponse actualizarMesa(Short id, MesaDTORequest mesaDTORequest) {
         if (id == null || mesaDTORequest == null) { return null; }
+        if(mesaDTORequest.capacidad() == 0) {throw new ErrorResponse("No se puede actualizar una mesa con capacidad 0", HttpStatus.BAD_REQUEST);}
         Mesa mesaEncontrada = mesaRepository.findById(id).orElseThrow(() -> new ErrorResponse("Mesa con ID: " + id + ", no encontrada", HttpStatus.NOT_FOUND));
         // mesaEncontrada.setNumero(mesaDTORequest.numero());
         mesaEncontrada.setCapacidad(mesaDTORequest.capacidad());
@@ -70,6 +74,9 @@ public class MesaServiceImpl implements MesaService {
         if (id == null || mesaCambiarEstadoRequestDTO == null) {
             throw new ErrorResponse("ID de la mesa o estado no puede ser nulo", HttpStatus.BAD_REQUEST);
         }
+        try{EstadoMesa  nuevoEstado = EstadoMesa.valueOf(mesaCambiarEstadoRequestDTO.estadoMesa().toUpperCase());}
+        catch (IllegalArgumentException e){throw new ErrorResponse("El estado '" + mesaCambiarEstadoRequestDTO.estadoMesa() + "' no es válido.", HttpStatus.BAD_REQUEST);}
+
         Mesa mesaEncontrada = mesaRepository.findById(id).orElseThrow(() -> new ErrorResponse("Mesa con ID: " + id + ", no encontrada", HttpStatus.NOT_FOUND));
         mesaEncontrada.setEstado(EstadoMesa.valueOf(mesaCambiarEstadoRequestDTO.estadoMesa().toUpperCase()));
         mesaRepository.save(mesaEncontrada);
@@ -88,6 +95,11 @@ public class MesaServiceImpl implements MesaService {
     @Transactional
     public void eliminarMesa(Short id) {
         if (id == null) { return; }
+        mesaRepository.findById(id).ifPresent(mesa -> {
+            if(mesa.getEstado() != EstadoMesa.LIBRE){
+                throw new ErrorResponse("La mesa no esta libre, no se puede eliminar", HttpStatus.CONFLICT);
+            }
+        });
         mesaRepository.deleteById(id);
     }
 
