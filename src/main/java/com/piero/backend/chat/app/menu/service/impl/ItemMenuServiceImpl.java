@@ -35,8 +35,9 @@ public class ItemMenuServiceImpl implements ItemMenuService {
     @Override
     @Transactional
     public ItemMenuDTOResponse guardarItemMenu(ItemMenuDTORequest itemMenuDTORequest) {
-        if(itemMenuRepository.existsByNombre(itemMenuDTORequest.nombre())){
-            throw new ErrorResponse("EL nombre de :" + itemMenuDTORequest.nombre() + " ya existe", HttpStatus.CONFLICT);
+        Boolean isExistNombre =itemMenuRepository.existsByNombreAndActivoTrue(itemMenuDTORequest.nombre());
+        if(isExistNombre){
+            throw new ErrorResponse("EL nombre de :" + itemMenuDTORequest.nombre() + " ya existe", HttpStatus.CONFLICT); //ToDo: Arreglar esta exception que no mande un JWT
         }
         Categoria categoriaElegida = categoriaRepository.findById(itemMenuDTORequest.idCategoria()).orElseThrow(()-> new ErrorResponse("Categoria no encontrada con id: " + itemMenuDTORequest.idCategoria(), HttpStatus.NOT_FOUND));
 
@@ -94,6 +95,7 @@ public class ItemMenuServiceImpl implements ItemMenuService {
     @Transactional
     public void eliminarItemMenu(Integer id) {
         ItemMenu itemMenuEliminar = itemMenuRepository.findById(id).orElseThrow(() -> new ErrorResponse("ItemMenu no encontrada con id: " + id, HttpStatus.NOT_FOUND));
+        
         itemMenuEliminar.setActivo(false);
         itemMenuRepository.save(itemMenuEliminar);
     }
