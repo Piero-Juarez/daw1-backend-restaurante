@@ -30,6 +30,7 @@ public class AppConfig {
             return User.builder()
                     .username(usuarioEncontrado.getCorreo())
                     .password(usuarioEncontrado.getClave())
+                    .roles(usuarioEncontrado.getRolUsuario().name())
                     .build();
         };
     }

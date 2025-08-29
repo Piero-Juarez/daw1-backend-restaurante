@@ -47,6 +47,31 @@ public class SecurityConfig {
                                 "/v3/api-docs/**"
                         ).permitAll()
 
+                        /* API USUARIOS */
+                        .requestMatchers("/api/usuarios/me").permitAll()
+                        .requestMatchers("/api/usuarios/**").hasRole("ADMINISTRADOR")
+
+                        /* API CATEGORIAS */
+                        .requestMatchers("/api/categorias/**").hasRole("ADMINISTRADOR")
+
+                        /* API MESAS */
+                        .requestMatchers(
+                                "/api/mesas/disponibles",
+                                "/api/mesas/con-orden-pendiente",
+                                "api/mesas/cambiar-estado/**"
+                        ).hasAnyRole("ADMINISTRADOR", "CAMARERO")
+                        .requestMatchers("/api/mesas/**").hasRole("ADMINISTRADOR")
+
+                        /* API ITEMS MENU */
+                        .requestMatchers("/api/items-menu/**").hasRole("ADMINISTRADOR")
+
+                        /* API ORDENES */
+                        .requestMatchers("/api/ordenes/pagar/**").hasAnyRole("ADMINISTRADOR", "CAJERO")
+                        .requestMatchers("/api/ordenes/**").hasAnyRole("ADMINISTRADOR","CAJERO", "CAMARERO")
+
+                        /* API REPORTES */
+                        .requestMatchers("/api/reportes/**").hasAnyRole("ADMINISTRADOR", "CAJERO")
+
                         // Lo demás requiere autenticación
                         .anyRequest().authenticated()
                 )
@@ -83,29 +108,23 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // Orígenes permitidos
         configuration.setAllowedOriginPatterns(List.of(
                 "http://localhost:*" // Cualquier puerto local
         ));
 
-        // Métodos HTTP permitidos
         configuration.setAllowedMethods(Arrays.asList(
                 "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD"
         ));
 
-        // Headers permitidos
         configuration.setAllowedHeaders(List.of("*"));
 
-        // Headers expuestos al cliente
         configuration.setExposedHeaders(Arrays.asList(
                 "Authorization",
                 "X-Total-Count"
         ));
 
-        // Permitir credenciales
         configuration.setAllowCredentials(true);
 
-        // Tiempo de cache para preflight requests
         configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

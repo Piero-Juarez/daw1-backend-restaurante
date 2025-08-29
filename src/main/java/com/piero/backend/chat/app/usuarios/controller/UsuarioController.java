@@ -25,10 +25,6 @@ public class UsuarioController {
 
     // LISTADO (GET)
     @GetMapping
-    @Operation(
-            summary = "Obtener todos los usuarios",
-            description = "Devuelve los usuarios activos en el sistema."
-    )
     public ResponseEntity<List<UsuarioDTOResponse>> obtenerUsuarios() {
         List<UsuarioDTOResponse> usuariosDtoResponse = usuarioService.obtenerUsuariosDto();
         return ResponseEntity.ok(usuariosDtoResponse);
@@ -36,10 +32,6 @@ public class UsuarioController {
 
     // OBTENER UN USUARIO (GET)
     @GetMapping("/{id}")
-    @Operation(
-            summary = "Obtener un usuario por su id",
-            description = "Devuelve un usuario con sus datos completos."
-    )
     public ResponseEntity<UsuarioDTOResponse> obtenerUsuarioPorId(@PathVariable Integer id) {
         UsuarioDTOResponse usuarioDtoResponse = usuarioService.obtenerUsuarioDtoPorId(id);
         return ResponseEntity.ok(usuarioDtoResponse);

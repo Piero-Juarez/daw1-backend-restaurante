@@ -1,7 +1,7 @@
 package com.piero.backend.chat.app.usuarios.model;
 
 import com.piero.backend.chat.app.auth.model.Token;
-import com.piero.backend.chat.app.usuarios.model.enums.Rol;
+import com.piero.backend.chat.app.usuarios.model.enums.RolUsuario;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
@@ -26,13 +26,13 @@ public class Usuario {
     private String nombre;
     private String apellido;
 
-    @Column(unique = true)
     private String correo;
 
     private String clave;
 
     @Enumerated(EnumType.STRING)
-    private Rol rol;
+    @Column(name = "rol")
+    private RolUsuario rolUsuario;
 
     @Builder.Default
     private Boolean activo = true;

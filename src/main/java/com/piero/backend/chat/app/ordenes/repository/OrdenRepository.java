@@ -25,7 +25,7 @@ public interface OrdenRepository extends JpaRepository<Orden, Long> {
     Optional<Orden> findByMesa_IdAndEstadoAndActivoTrue(Short mesaId, EstadoOrden estado);
 
     @Modifying
-    @Query("UPDATE Orden o SET o.activo = false WHERE (o.estado = 'CANCELADA' OR o.estado = 'COMPLETADA') AND o.activo = true")
-    void desactivarOrdenesCanceladasCompletadas();
+    @Query("UPDATE Orden o SET o.activo = false WHERE (o.estado = 'CANCELADA' OR o.estado = 'PAGADA') AND o.activo = true")
+    void desactivarOrdenesCanceladasPagadas();
 
 }

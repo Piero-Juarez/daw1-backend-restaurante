@@ -20,7 +20,7 @@ public interface MesaRepository extends JpaRepository<Mesa, Short> {
     @Query("SELECT o.mesa FROM Orden o WHERE o.estado = :estado AND o.activo = true")
     List<Mesa> encontrarMesasPorEstadoOrden(@Param("estado") EstadoOrden estado);
 
-    Boolean existsByNumero(String numero);
+    Boolean existsMesaByNumero(String numero);
 
 
 }

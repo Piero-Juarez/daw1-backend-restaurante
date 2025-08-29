@@ -35,7 +35,7 @@ public class ItemMenuServiceImpl implements ItemMenuService {
     @Override
     @Transactional
     public ItemMenuDTOResponse guardarItemMenu(ItemMenuDTORequest itemMenuDTORequest) {
-        Boolean isExistNombre =itemMenuRepository.existsByNombreAndActivoTrue(itemMenuDTORequest.nombre());
+        boolean isExistNombre =itemMenuRepository.existsByNombreAndActivoTrue(itemMenuDTORequest.nombre());
         if(isExistNombre){
             throw new ErrorResponse("EL nombre de :" + itemMenuDTORequest.nombre() + " ya existe", HttpStatus.CONFLICT); //ToDo: Arreglar esta exception que no mande un JWT
         }
@@ -63,7 +63,7 @@ public class ItemMenuServiceImpl implements ItemMenuService {
         ItemMenu itemMenu = itemMenuRepository.findById(idMenu).orElseThrow(() -> new ErrorResponse("ItemMenu no encontrada con id: " + idMenu, HttpStatus.NOT_FOUND));
         Categoria categoriaElegida = categoriaRepository.findById(itemMenuDTORequest.idCategoria()).orElseThrow(()-> new ErrorResponse("Categoria no encontrada con id: " + itemMenuDTORequest.idCategoria(), HttpStatus.NOT_FOUND));
 
-        Boolean isExistNombre =itemMenuRepository.existsByNombreAndActivoTrue(itemMenuDTORequest.nombre());
+        boolean isExistNombre =itemMenuRepository.existsByNombreAndActivoTrue(itemMenuDTORequest.nombre());
         if(isExistNombre){
             throw new ErrorResponse("EL nombre de :" + itemMenuDTORequest.nombre() + " ya existe", HttpStatus.CONFLICT); //ToDo: Arreglar esta exception que no mande un JWT
         }
@@ -74,7 +74,7 @@ public class ItemMenuServiceImpl implements ItemMenuService {
         itemMenu.setPrecio(itemMenuDTORequest.precio());
         itemMenu.setEnlaceImagen(itemMenuDTORequest.enlaceImagen());
         itemMenu.setCategoria(categoriaElegida);
-        //añadir el guardado de imagen
+
         itemMenuRepository.save(itemMenu);
 
         return itemMenuMapper.toDtoResponse(itemMenu);
@@ -107,11 +107,11 @@ public class ItemMenuServiceImpl implements ItemMenuService {
     }
 
     public void controlErroresPrecio(ItemMenuDTORequest itemMenuDTORequest, Categoria categoriaElegida) {
-        if(itemMenuDTORequest.precio()<=0){
-            throw new ErrorResponse("El precio debe ser mayor a S/ 0", HttpStatus.BAD_REQUEST);
+        if(itemMenuDTORequest.precio() <= 0){
+            throw new ErrorResponse("El precio debe ser mayor a S/0", HttpStatus.CONFLICT);
         }
-        if (itemMenuDTORequest.precio()<categoriaElegida.getPrecioMinimo()){
-            throw new ErrorResponse("El precio debe ser mayor a S/ " +  categoriaElegida.getPrecioMinimo(), HttpStatus.BAD_REQUEST);
+        if (itemMenuDTORequest.precio() < categoriaElegida.getPrecioMinimo()){
+            throw new ErrorResponse("El precio debe ser mayor a S/" +  categoriaElegida.getPrecioMinimo(), HttpStatus.CONFLICT);
         }
     }
 }

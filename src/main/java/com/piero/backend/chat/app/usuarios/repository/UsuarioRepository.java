@@ -21,4 +21,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     @Query("UPDATE Usuario u SET u.activo = false WHERE u.id = :id")
     void eliminacionLogicaPorId(@Param("id") Integer id);
 
+    boolean existsByCorreoAndActivoTrue(String correo);
+
 }

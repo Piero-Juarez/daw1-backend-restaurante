@@ -4,7 +4,7 @@ import com.piero.backend.chat.app.config.AppUtils;
 import com.piero.backend.chat.app.usuarios.dto.UsuarioDTORequest;
 import com.piero.backend.chat.app.usuarios.dto.UsuarioDTOResponse;
 import com.piero.backend.chat.app.usuarios.model.Usuario;
-import com.piero.backend.chat.app.usuarios.model.enums.Rol;
+import com.piero.backend.chat.app.usuarios.model.enums.RolUsuario;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -25,7 +25,7 @@ public class UsuarioMapper {
                 .nombre(usuario.getNombre())
                 .apellido(usuario.getApellido())
                 .correo(usuario.getCorreo())
-                .rol(AppUtils.capitalizarTexto(usuario.getRol().name()))
+                .rol(AppUtils.capitalizarTexto(usuario.getRolUsuario().name()))
                 .build();
     }
 
@@ -42,7 +42,7 @@ public class UsuarioMapper {
                 .apellido(usuarioDTORequest.apellido())
                 .correo(usuarioDTORequest.correo())
                 .clave(passwordEncoder.encode(usuarioDTORequest.clave()))
-                .rol(Rol.valueOf(usuarioDTORequest.rol()))
+                .rolUsuario(RolUsuario.valueOf(usuarioDTORequest.rol()))
                 .build();
     }
 

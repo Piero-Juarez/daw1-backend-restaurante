@@ -18,7 +18,7 @@ public class MesaMapperImpl implements MesaMapper {
         return MesaDTOResponse
                 .builder()
                 .id(mesa.getId())
-                .numero(devolverFormato(mesa.getNumero()))
+                .numero(mesa.getNumero())
                 .capacidad(mesa.getCapacidad())
                 .estado(AppUtils.capitalizarTexto(mesa.getEstado().name()))
                 .build();
@@ -34,19 +34,9 @@ public class MesaMapperImpl implements MesaMapper {
         if (mesaDTORequest == null) { return null; }
         return Mesa
                 .builder()
-                .numero(cambiarFormato(mesaDTORequest.numero()))
+                .numero(mesaDTORequest.numero())
                 .capacidad(mesaDTORequest.capacidad())
                 .build();
-    }
-
-    public static String cambiarFormato(String texto) {
-        if (texto == null || texto.isBlank()) { return texto; }
-        return "mesa@" + texto;
-    }
-
-    public static String devolverFormato(String texto) {
-        if (texto == null || texto.isBlank()) { return texto; }
-        return texto.substring(texto.indexOf("@") + 1);
     }
 
 }

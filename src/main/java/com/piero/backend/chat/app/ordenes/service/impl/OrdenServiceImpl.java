@@ -81,8 +81,14 @@ public class OrdenServiceImpl implements OrdenService {
     @Transactional
     public OrdenResponseDTO actualizarOrden(Long ordenId, OrdenActualizarRequestDTO ordenActualizarRequestDTO) {
         Orden orden = ordenRepository.findById(ordenId).orElseThrow(() -> new ErrorResponse("Orden no encontrada con ID: " + ordenId, HttpStatus.NOT_FOUND));
-        if (orden.getEstado().equals(EstadoOrden.PREPARANDO) || orden.getEstado().equals(EstadoOrden.COMPLETADA) || orden.getEstado().equals(EstadoOrden.CANCELADA)) {
-            throw new ErrorResponse("No se puede modificar una orden que ya está en preparación, ha sido completada o cancelada", HttpStatus.CONFLICT);
+        if (orden.getEstado().equals(EstadoOrden.PREPARANDO) ||
+                orden.getEstado().equals(EstadoOrden.COMPLETADA) ||
+                orden.getEstado().equals(EstadoOrden.CANCELADA) ||
+                orden.getEstado().equals(EstadoOrden.EN_REPARTO) ||
+                orden.getEstado().equals(EstadoOrden.ENTREGADA) ||
+                orden.getEstado().equals(EstadoOrden.PAGADA)
+        ) {
+            throw new ErrorResponse("No se puede modificar una orden con estado 'PREPARANDO', 'COMPLETADA', 'EN_REPARTO', 'ENTREGADA', 'PAGADA', 'CANCELADA'.", HttpStatus.CONFLICT);
         }
         ordenMapper.actualizarDetalles(orden, ordenActualizarRequestDTO.detalles());
         Orden ordenActualizada = ordenRepository.save(orden);
@@ -120,12 +126,18 @@ public class OrdenServiceImpl implements OrdenService {
         EstadoOrden estadoActual = orden.getEstado();
         EstadoOrden nuevoEstado = EstadoOrden.valueOf(ordenCambiarEstadoRequestDTO.estadoOrden().toUpperCase());
 
-        // REGLA 1: No se puede cambiar el estado de una orden ya cancelada o entregada.
-        if (estadoActual.equals(EstadoOrden.CANCELADA) || estadoActual.equals(EstadoOrden.ENTREGADA)) {
-            throw new ErrorResponse("No se puede cambiar el estado de una orden cancelada o ya entregada.", HttpStatus.CONFLICT);
+        if (estadoActual.equals(EstadoOrden.CANCELADA) || estadoActual.equals(EstadoOrden.PAGADA)) {
+            throw new ErrorResponse("No se puede cambiar el estado de una orden cancelada o ya pagada.", HttpStatus.CONFLICT);
         }
 
-        // REGLA 2: Desde 'COMPLETADA', el único camino válido es 'EN_REPARTO'.
+        if (estadoActual.equals(EstadoOrden.PENDIENTE) && !nuevoEstado.equals(EstadoOrden.PREPARANDO)) {
+            throw new ErrorResponse("Una orden pendiente solo puede pasar a 'Preparando'.", HttpStatus.CONFLICT);
+        }
+
+        if (estadoActual.equals(EstadoOrden.PREPARANDO) && !nuevoEstado.equals(EstadoOrden.COMPLETADA)) {
+            throw new ErrorResponse("Una orden preparando solo puede pasar a 'Completada'.", HttpStatus.CONFLICT);
+        }
+
         if (estadoActual.equals(EstadoOrden.COMPLETADA) && !nuevoEstado.equals(EstadoOrden.EN_REPARTO)) {
             throw new ErrorResponse("Una orden completada en cocina solo puede pasar a 'En Reparto'.", HttpStatus.CONFLICT);
         }
@@ -134,14 +146,12 @@ public class OrdenServiceImpl implements OrdenService {
             throw new ErrorResponse("Una orden en reparto solo puede pasar a 'Entregada'.", HttpStatus.CONFLICT);
         }
 
-        if (estadoActual.equals(EstadoOrden.PAGADA)) {
-            throw new ErrorResponse("No se puede cambiar el estado de una orden pagada.", HttpStatus.CONFLICT);
+        if (estadoActual.equals(EstadoOrden.ENTREGADA) && !nuevoEstado.equals(EstadoOrden.PAGADA)) {
+            throw new ErrorResponse("Una orden entregada solo puede pasar a 'Pagada'.", HttpStatus.CONFLICT);
         }
 
-        // Si pasa las validaciones, aplicamos el nuevo estado.
         orden.setEstado(nuevoEstado);
 
-        // Lógica para liberar la mesa. Ahora se activa cuando la orden es CANCELADA.
         if (nuevoEstado.equals(EstadoOrden.CANCELADA)) {
             Mesa mesa = mesaRepository.findById(orden.getMesa().getId()).orElseThrow(() -> new ErrorResponse("Mesa no encontrada", HttpStatus.NOT_FOUND));
 
@@ -162,7 +172,7 @@ public class OrdenServiceImpl implements OrdenService {
     @Override
     @Transactional
     public void desactivarOrdenes() {
-        ordenRepository.desactivarOrdenesCanceladasCompletadas();
+        ordenRepository.desactivarOrdenesCanceladasPagadas();
     }
 
 }
