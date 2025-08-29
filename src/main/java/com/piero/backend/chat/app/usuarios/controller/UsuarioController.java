@@ -3,7 +3,6 @@ package com.piero.backend.chat.app.usuarios.controller;
 import com.piero.backend.chat.app.usuarios.dto.UsuarioDTORequest;
 import com.piero.backend.chat.app.usuarios.dto.UsuarioDTOResponse;
 import com.piero.backend.chat.app.usuarios.service.UsuarioService;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
