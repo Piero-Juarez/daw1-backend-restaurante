@@ -37,7 +37,7 @@ public class ItemMenuServiceImpl implements ItemMenuService {
     public ItemMenuDTOResponse guardarItemMenu(ItemMenuDTORequest itemMenuDTORequest) {
         boolean isExistNombre =itemMenuRepository.existsByNombreAndActivoTrue(itemMenuDTORequest.nombre());
         if(isExistNombre){
-            throw new ErrorResponse("EL nombre de :" + itemMenuDTORequest.nombre() + " ya existe", HttpStatus.CONFLICT); //ToDo: Arreglar esta exception que no mande un JWT
+            throw new ErrorResponse("EL nombre de " + itemMenuDTORequest.nombre() + " ya existe", HttpStatus.CONFLICT);
         }
         Categoria categoriaElegida = categoriaRepository.findById(itemMenuDTORequest.idCategoria()).orElseThrow(()-> new ErrorResponse("Categoria no encontrada con id: " + itemMenuDTORequest.idCategoria(), HttpStatus.NOT_FOUND));
 
@@ -64,8 +64,8 @@ public class ItemMenuServiceImpl implements ItemMenuService {
         Categoria categoriaElegida = categoriaRepository.findById(itemMenuDTORequest.idCategoria()).orElseThrow(()-> new ErrorResponse("Categoria no encontrada con id: " + itemMenuDTORequest.idCategoria(), HttpStatus.NOT_FOUND));
 
         boolean isExistNombre =itemMenuRepository.existsByNombreAndActivoTrue(itemMenuDTORequest.nombre());
-        if(isExistNombre){
-            throw new ErrorResponse("EL nombre de :" + itemMenuDTORequest.nombre() + " ya existe", HttpStatus.CONFLICT); //ToDo: Arreglar esta exception que no mande un JWT
+        if(!itemMenuDTORequest.nombre().equals(itemMenu.getNombre()) && isExistNombre){
+            throw new ErrorResponse("EL nombre de " + itemMenuDTORequest.nombre() + " ya existe", HttpStatus.CONFLICT);
         }
         controlErroresPrecio(itemMenuDTORequest, categoriaElegida);
 

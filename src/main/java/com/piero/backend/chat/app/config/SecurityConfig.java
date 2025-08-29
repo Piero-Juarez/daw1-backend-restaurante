@@ -52,6 +52,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/usuarios/**").hasRole("ADMINISTRADOR")
 
                         /* API CATEGORIAS */
+                        .requestMatchers("/api/categorias").hasAnyRole("ADMINISTRADOR", "CAMARERO")
                         .requestMatchers("/api/categorias/**").hasRole("ADMINISTRADOR")
 
                         /* API MESAS */
@@ -63,6 +64,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/mesas/**").hasRole("ADMINISTRADOR")
 
                         /* API ITEMS MENU */
+                        .requestMatchers("/api/items-menu/buscar").hasAnyRole("ADMINISTRADOR", "CAMARERO")
                         .requestMatchers("/api/items-menu/**").hasRole("ADMINISTRADOR")
 
                         /* API ORDENES */
