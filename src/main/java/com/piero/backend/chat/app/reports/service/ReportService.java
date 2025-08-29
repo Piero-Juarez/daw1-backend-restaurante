@@ -3,6 +3,7 @@ package com.piero.backend.chat.app.reports.service;
 import com.piero.backend.chat.app.exception.ErrorResponse;
 import com.piero.backend.chat.app.ordenes.dto.detalleorden.DetalleOrdenResponseDTO;
 import com.piero.backend.chat.app.ordenes.dto.orden.OrdenResponseDTO;
+import com.piero.backend.chat.app.ordenes.model.enums.EstadoOrden;
 import com.piero.backend.chat.app.ordenes.service.OrdenService;
 import com.piero.backend.chat.app.reports.dto.InformacionAdicionalBoletaRequest;
 import com.piero.backend.chat.app.reports.data.DetalleInfo;
@@ -30,6 +31,10 @@ public class ReportService {
 
         if (info.montoPagado() < orden.montoTotal()) {
             throw new ErrorResponse("El monto pagado no puede ser menor al monto total de la orden", HttpStatus.BAD_REQUEST);
+        }
+
+        if (!orden.estadoOrden().toUpperCase().equals(EstadoOrden.PAGADA.name())) {
+            throw new ErrorResponse("La orden no se encuentra pagada", HttpStatus.BAD_REQUEST);
         }
 
         try {
