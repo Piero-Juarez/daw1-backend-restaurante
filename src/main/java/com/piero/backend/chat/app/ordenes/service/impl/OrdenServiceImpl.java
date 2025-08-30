@@ -130,12 +130,12 @@ public class OrdenServiceImpl implements OrdenService {
             throw new ErrorResponse("No se puede cambiar el estado de una orden cancelada o ya pagada.", HttpStatus.CONFLICT);
         }
 
-        if (estadoActual.equals(EstadoOrden.PENDIENTE) && !nuevoEstado.equals(EstadoOrden.PREPARANDO)) {
-            throw new ErrorResponse("Una orden pendiente solo puede pasar a 'Preparando'.", HttpStatus.CONFLICT);
+        if (estadoActual.equals(EstadoOrden.PENDIENTE) && !nuevoEstado.equals(EstadoOrden.PREPARANDO) && !nuevoEstado.equals(EstadoOrden.CANCELADA)) {
+            throw new ErrorResponse("Una orden pendiente solo puede pasar a 'Preparando' o 'Cancelada'.", HttpStatus.CONFLICT);
         }
 
-        if (estadoActual.equals(EstadoOrden.PREPARANDO) && !nuevoEstado.equals(EstadoOrden.COMPLETADA)) {
-            throw new ErrorResponse("Una orden preparando solo puede pasar a 'Completada'.", HttpStatus.CONFLICT);
+        if (estadoActual.equals(EstadoOrden.PREPARANDO) && !nuevoEstado.equals(EstadoOrden.COMPLETADA) && !nuevoEstado.equals(EstadoOrden.CANCELADA)) {
+            throw new ErrorResponse("Una orden preparando solo puede pasar a 'Completada' o 'Cancelada'.", HttpStatus.CONFLICT);
         }
 
         if (estadoActual.equals(EstadoOrden.COMPLETADA) && !nuevoEstado.equals(EstadoOrden.EN_REPARTO)) {
